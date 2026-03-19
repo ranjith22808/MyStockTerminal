@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Stock Terminal</title>
+    <style>
+        :root {
+            --bg: #0b0e14;
+            --card: #171b26;
+            --accent-blue: #3b82f6;
+            --accent-green: #00ff88;
+            --text-main: #f1f5f9;
+            --text-dim: #94a3b8;
+        }
+
+        body { 
+            font-family: 'Inter', -apple-system, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text-main); 
+            padding: 40px; 
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Categorized Headers */
+        .section-header {
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #2a2e39;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-header h2 { 
+            font-size: 1.2rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            color: var(--accent-blue);
+            margin: 0;
+        }
+
+        /* Responsive Grid */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 20px; 
+        }
+
+        /* Card Styling */
+        .card { 
+            background: var(--card); 
+            padding: 20px; 
+            border-radius: 12px; 
+            border: 1px solid #2a2e39;
+            text-decoration: none; 
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover { 
+            transform: translateY(-5px); 
+            border-color: var(--accent-blue);
+            background: #1c2130;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Icon Wrapper */
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            background: #2a2e39;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .icon-box img { width: 32px; height: 32px; object-fit: contain; }
+
+        .card-info h3 { margin: 0; font-size: 1rem; color: #fff; }
+        .card-info p { margin: 3px 0 0; font-size: 0.8rem; color: var(--text-dim); }
+        .tag { font-size: 0.65rem; font-weight: bold; color: var(--accent-green); display: block; margin-top: 5px; }
+
+        /* --- MOBILE OPTIMIZATIONS --- */
+        @media (max-width: 600px) {
+            body {
+                padding: 20px; /* Reduced outer spacing */
+            }
+
+            header h1 {
+                font-size: 1.6rem !important; /* Smaller title for small screens */
+            }
+
+            .grid {
+                grid-template-columns: 1fr; /* Force single column */
+                gap: 12px;
+            }
+
+            .card {
+                padding: 15px; /* Compact cards */
+            }
+
+            .section-header h2 {
+                font-size: 1rem; /* Better fit for headers */
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header style="text-align:center; margin-bottom: 40px;">
+        <h1 style="font-size: 2.2rem; margin-bottom: 10px;">STOCK TERMINAL <span style="color:var(--accent-blue)">v5.0</span></h1>
+        <p style="color:var(--text-dim)">Professional Multi-Source Market Analysis Hub</p>
+    </header>
+
+    <div class="section-header">
+        <h2>🌐 External Market Platforms</h2>
+    </div>
+    <div class="grid">
+        <a href="https://www.tradingview.com/chart/dc5mmaIF/" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/10433/10433048.png"></div>
+            <div class="card-info">
+                <h3>TRADING VIEW</h3>
+                <p>Live Charts & Technicals</p>
+                <span class="tag">EXTERNAL WEB</span>
+            </div>
+        </a>
+<a href="https://in.investing.com" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/10433/10433049.png"></div>
+            <div class="card-info">
+                <h3>INVESTING</h3>
+                <p>Live Charts & Technicals</p>
+                <span class="tag">EXTERNAL WEB</span>
+            </div>
+        </a>
+
+        <a href="https://www.screener.in" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/3222/3222672.png"></div>
+            <div class="card-info">
+                <h3>SCREENER.IN</h3>
+                <p>Fundamental Data & Peer Comp</p>
+                <span class="tag">EXTERNAL WEB</span>
+            </div>
+        </a>
+
+        <a href="https://www.google.com/finance" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/2702/2702602.png"></div>
+            <div class="card-info">
+                <h3>GOOGLE FINANCE</h3>
+                <p>Portfolio Tracking & News</p>
+                <span class="tag">EXTERNAL WEB</span>
+            </div>
+        </a>
+
+        <a href="https://kite.zerodha.com/" target="_blank" class="card">
+            <div class="icon-box"><img src="https://kite.zerodha.com/static/images/kite-logo.svg"></div>
+            <div class="card-info">
+                <h3>ZERODHA KITE</h3>
+                <p>Brokerage & Trading Console</p>
+                <span class="tag" style="color:#ff5722">BROKER TAB</span>
+            </div>
+        </a>
+
+        <a href="https://dhan.co/" target="_blank" class="card">
+            <div class="icon-box"><img src="icons/dhan.png"></div>
+            <div class="card-info">
+                <h3>DHAN</h3>
+                <p>Brokerage & Trading Console</p>
+                <span class="tag" style="color:#ff5722">BROKER TAB</span>
+            </div>
+        </a>
+
+        <a href="https://groww.in" target="_blank" class="card">
+            <div class="icon-box"><img src="icons/grow.png"></div>
+            <div class="card-info">
+                <h3>GROWW</h3>
+                <p>Brokerage & Trading Console</p>
+                <span class="tag" style="color:#ff5722">BROKER TAB</span>
+            </div>
+        </a>
+    
+             <a href="https://www.angelone.in/" target="_blank" class="card">
+            <div class="icon-box"><img src="icons/angel.png"></div>
+            <div class="card-info">
+                <h3>ANGELONE</h3>
+                <p>Brokerage & Trading Console</p>
+                <span class="tag"style="color:#FFFF00">BROKER TAB</span>
+            </div>        
+        <a href="https://web.stockedge.com/app/markets" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/2422/2422796.png"></div>
+            <div class="card-info">
+                <h3>STOCKEDGE</h3>
+                <p>Market Scans & FII/DII Data</p>
+                <span class="tag">EXTERNAL WEB</span>
+            </div>
+        </a>
+
+        <a href="https://www.tickertape.in/" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/10433/10433048.png"></div>
+            <div class="card-info">
+                <h3>TICKERTAPE</h3>
+                <p>Stock Checklist & Scorecards</p>
+                <span class="tag">EXTERNAL WEB</span>
+            </div>
+        </a>
+
+        <a href="https://www.nseindia.com" target="_blank" class="card">
+            <div class="icon-box"><img src="icons/nse.png"></div>
+            <div class="card-info">
+                <h3>NSE INDIA</h3>
+                <p>National Stock Exchange Data</p>
+                <span class="tag">EXCHANGE</span>
+            </div>
+        </a>
+
+        <a href="https://www.bseindia.com" target="_blank" class="card">
+            <div class="icon-box"><img src="icons/bse.jpg"></div>
+            <div class="card-info">
+                <h3>BSE INDIA</h3>
+                <p>Bombay Stock Exchange Data</p>
+                <span class="tag">EXCHANGE</span>
+            </div>
+        </a>
+
+         <a href="https://finance.yahoo.com" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/4241/4241514.png"></div>
+            <div class="card-info">
+                <h3>YAHOO FINANCE</h3>
+                <p>Tickers Of Company</p>
+                <span class="tag">EXCHANGE</span>
+            </div>    
+        </a>
+             <a href="https://www.morningstar.in" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/4241/4241515.png"></div>
+            <div class="card-info">
+                <h3>Morningstar</h3>
+                <p>Licensed Data</p>
+                <span class="tag"style="color:#FFFF00">ETF DETAILS</span>
+            </div>    
+        </a>
+             <a href="https://www.moneycontrol.com/" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/4241/4241520.png"></div>
+            <div class="card-info">
+                <h3>MONEYCONTROL</h3>
+                <p>Licensed Data</p>
+                <span class="tag"style="color:#FFFF00">ETF DETAILS</span>
+            </div>        
+       
+        </a>
+        <a href="https://groww.in" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/4241/4241513.png"></div>
+            <div class="card-info">
+                <h3>GROWW</h3>
+                <p>Brokerage & Trading Console</p>
+                <span class="tag" style="color:#ff5722">BROKER TAB</span>
+            </div>
+        </a>
+    </div>
+
+    <div class="section-header">
+        <h2>🛠️ Personal Analytics Suites</h2>
+    </div>
+    <div class="grid">
+        <a href="projects/The 4-in-1 Investment Suite v3.5.html" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/2621/2621253.png"></div>
+            <div class="card-info">
+                <h3>SIP,CAGR,FV CALCULATOR</h3>
+                <p>Multi-tool Investment Analysis</p>
+                <span class="tag" style="color:var(--accent-blue)">LOCAL HTML</span>
+            </div>
+        </a>
+        <a href="projects/InvestCalc Pro - Elite Edition.html" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/2621/2621254.png"></div>
+            <div class="card-info">
+                <h3>Invest & Profit Calculator</h3>
+                <p>Profit & Charges Calculator</p>
+                <span class="tag" style="color:var(--accent-blue)">LOCAL HTML</span>
+            </div>
+        </a>
+       <a href="projects/Share Buy Calculator.html" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/2311/2311538.png"></div>
+            <div class="card-info">
+                <h3>Share Buy Calculator</h3>
+                <p>CPITAL VS SHARE</p>
+                <span class="tag" style="color:var(--accent-blue)">LOCAL HTML</span>
+            </div>
+        </a>
+    </div>
+
+<div class="section-header">
+        <h2>🛠️ AI Tools </h2>
+    </div>
+    <div class="grid">
+        <a href="https://chatgpt.com/" target="_blank" class="card">
+            <div class="icon-box"><img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/chatgpt-icon.png"></div>
+            <div class="card-info">
+                <h3>CHATGPT</h3>
+                <p>AI tool Investment Analysis</p>
+                <span class="tag" style="color:var(--accent-blue)">LOCAL HTML</span>
+            </div>
+        </a>
+        <a href="https://gemini.google.com/" target="_blank" class="card">
+            <div class="icon-box"><img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/google-gemini-icon.png"></div>
+            <div class="card-info">
+                <h3>GEMINI AI</h3>
+                <p>AI tool Investment Analysis</p>
+                <span class="tag" style="color:var(--accent-blue)">LOCAL HTML</span>
+            </div>
+        </a>
+        <a href="https://www.deepseek.com/en/" target="_blank" class="card">
+            <div class="icon-box"><img src="icons/deepseek.png"></div>
+            <div class="card-info">
+                <h3>DEEPSEEK AI</h3>
+                <p>AI tool Investment Analysis</p>
+                <span class="tag" style="color:var(--accent-blue)">LOCAL HTML</span>
+            </div>    
+        </a>
+        <a href="projects/StockTool_Updated.html" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/4241/4241526.png"></div>
+            <div class="card-info">
+                <h3>Ai Prompt Generator</h3>
+                <p>Copy the prompt past in any AI</p>
+                <span class="tag" style="color:var(--accent-blue)">LOCAL HTML</span>
+            </div>
+        
+        </a>
+    </div>
+    <div class="section-header">
+        <h2>📄 Research & PDF Data</h2>
+    </div>
+    <div class="grid">
+     <a href="documents/Stock Fundamental Analysis Prompt.pdf" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/337/337949.png"></div>
+            <div class="card-info">
+                <h3>Prompt For Analyze</h3>
+                <p>Ai Prompt</p>
+                <span class="tag" style="color:#ffc107">PDF FILE</span>
+            </div>
+        </a>    
+     <a href="documents/Stock Fundamental Analysis text.txt" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/337/337949.png"></div>
+            <div class="card-info">
+                <h3>Prompt For Analyze</h3>
+                <p>Ai Prompt</p>
+                <span class="tag" style="color:#ffc107">TEXT FILE</span>
+            </div>
+        </a>        
+         <a href="documents/Master Indicator V6.1 - Final Inverst Unified.txt" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/4241/4241525.png"></div>
+            <div class="card-info">
+                <h3>Master Indicator V6.1</h3>
+                <p>Tradeing View Indicator</p>
+                <span class="tag" style="color:#ffc107">TEXT FILE</span>
+            </div>
+        </a>        
+        <a href="documents/report1.pdf" target="_blank" class="card">
+            <div class="icon-box"><img src="https://cdn-icons-png.flaticon.com/512/337/337946.png"></div>
+            <div class="card-info">
+                <h3>Market Analysis Report</h3>
+                <p>Saved PDF Research Documents</p>
+                <span class="tag" style="color:#ffc107">PDF FILE</span>
+            </div>
+        </a>
+    </div>
+
+</body>
+</html>

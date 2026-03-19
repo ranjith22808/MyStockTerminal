@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The 4-in-1 Investment Suite v3.5</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #4f46e5; --invested: #f97316; --returns: #10b981; --bg: #f0f2f5; --card: #ffffff; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); display: flex; justify-content: center; padding: 15px; color: #1e2937; margin: 0; }
+        .card { background: var(--card); width: 100%; max-width: 1050px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); overflow: hidden; }
+        
+        /* Mobile Responsive Header */
+        .header { padding: 25px; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 15px; }
+        @media (max-width: 600px) {
+            .header { flex-direction: column; text-align: center; padding: 20px; }
+            .header-actions { width: 100%; justify-content: center; }
+        }
+
+        .header h3 { margin: 0; font-size: 1.5rem; font-weight: 800; }
+        .tabs { display: flex; gap: 8px; padding: 15px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .tabs::-webkit-scrollbar { display: none; } /* Hide scrollbar for clean look */
+        
+        .tab-btn { padding: 10px 18px; border-radius: 12px; border: 1px solid #e2e8f0; background: #fff; cursor: pointer; font-weight: 700; font-size: 0.8rem; transition: 0.3s; white-space: nowrap; }
+        .tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
+        
+        /* Main Layout Responsiveness */
+        .main-content { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 30px; padding: 30px; }
+        @media (max-width: 900px) { 
+            .main-content { grid-template-columns: 1fr; padding: 20px; } 
+            .res-main { font-size: 2.2rem !important; }
+        }
+
+        .input-box { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 16px; padding: 15px; margin-bottom: 20px; }
+        .input-box label { font-size: 0.7rem; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .input-box input { border: none; width: 100%; font-size: 1.8rem; font-weight: 800; outline: none; background: transparent; text-align: center; }
+        
+        .slider-wrap { margin-bottom: 25px; }
+        .slider-head { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 700; font-size: 0.9rem; }
+        .slider-head .val { color: var(--primary); font-size: 1rem; }
+        input[type=range] { width: 100%; accent-color: var(--primary); cursor: pointer; height: 8px; }
+
+        .result-area { display: flex; flex-direction: column; align-items: center; background: #fcfcfd; border-radius: 20px; padding: 20px; }
+        .res-main { font-size: 2.8rem; font-weight: 800; margin: 10px 0; color: #1e2937; text-align: center; }
+        .res-word { color: var(--primary); font-style: italic; font-weight: 600; text-transform: capitalize; text-align: center; font-size: 0.9rem; line-height: 1.4; }
+        
+        .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-top: 25px; }
+        .metric-card { padding: 15px; border-radius: 16px; border: 1px solid #f1f5f9; }
+        .m-invested { border-left: 5px solid var(--invested); background: #fff7ed; }
+        .m-profit { border-left: 5px solid var(--returns); background: #f0fdf4; }
+        .metric-card small { font-size: 0.7rem; font-weight: 800; color: #64748b; text-transform: uppercase; }
+        .metric-card div { font-size: 1.2rem; font-weight: 800; margin-top: 5px; }
+
+        .yearly-section { padding: 20px; border-top: 1px solid #f1f5f9; overflow-x: auto; }
+        .chart-container { min-width: 500px; height: 250px; }
+
+        .btn { padding: 10px 18px; border-radius: 10px; cursor: pointer; font-weight: 800; border: none; font-size: 0.8rem; }
+        .dl-btn { background: #10b981; color: white; }
+        .clear-btn { background: #fee2e2; color: #ef4444; }
+        
+        .footer { padding: 20px; background: #f8fafc; font-size: 0.75rem; color: #64748b; display: flex; flex-direction: column; align-items: center; gap: 8px; border-top: 1px solid #e2e8f0; text-align: center; }
+        @media (min-width: 600px) { .footer { flex-direction: row; justify-content: space-between; } }
+        .author-name { color: var(--primary); font-weight: 800; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="header">
+        <div><h3>The 4-in-1 Investment Suite</h3><small>Wealth Planning v3.5</small></div>
+        <div class="header-actions" style="display: flex; gap: 8px;">
+            <button class="btn dl-btn" onclick="downloadExcel()">Report</button>
+            <button class="btn clear-btn" onclick="clearTab()">Clear</button>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" id="btn-sip" onclick="showTab('sip')">SIP</button>
+        <button class="tab-btn" id="btn-step" onclick="showTab('step')">Step-Up SIP</button>
+        <button class="tab-btn" id="btn-goal" onclick="showTab('goal')">Goal SIP Planner</button>
+        <button class="tab-btn" id="btn-fv" onclick="showTab('fv')">Lump Sum (FV)</button>
+        <button class="tab-btn" id="btn-cagr" onclick="showTab('cagr')">CAGR</button>
+    </div>
+
+    <div class="main-content">
+        <div class="input-area">
+            <div class="input-box">
+                <label id="label-p">Monthly Investment</label>
+                <div style="display:flex; align-items:center; justify-content:center;">
+                    <span style="font-size:1.5rem; font-weight:800; margin-right:5px;">₹</span>
+                    <input type="number" id="in-p" oninput="run()" placeholder="0">
+                </div>
+            </div>
+            <div class="input-box" id="box-s" style="display:none; border-color: var(--returns);">
+                <label>Final Value / Maturity Amount</label>
+                <div style="display:flex; align-items:center; justify-content:center;">
+                    <span style="font-size:1.5rem; font-weight:800; margin-right:5px;">₹</span>
+                    <input type="number" id="in-s" oninput="run()" placeholder="0">
+                </div>
+            </div>
+            <div class="slider-wrap" id="wrap-step" style="display:none;">
+                <div class="slider-head"><span>Annual Step-Up %</span> <span class="val" id="val-step">10%</span></div>
+                <input type="range" id="sl-step" min="1" max="50" step="1" oninput="run()">
+            </div>
+            <div class="slider-wrap">
+                <div class="slider-head"><span>Duration</span> <span class="val" id="val-n">10 Yrs</span></div>
+                <input type="range" id="sl-n" min="1" max="40" step="1" oninput="run()">
+            </div>
+            <div class="slider-wrap" id="wrap-r">
+                <div class="slider-head"><span>Expected Return (%)</span> <span class="val" id="val-r">12%</span></div>
+                <input type="range" id="sl-r" min="1" max="30" step="0.5" oninput="run()">
+            </div>
+        </div>
+
+        <div class="result-area">
+            <span style="font-weight:700; color:#6b7280; font-size: 0.8rem;" id="res-lbl">Final Wealth</span>
+            <div class="res-main" id="res-amt">₹ 0</div>
+            <div class="res-word" id="res-words"></div>
+            <div style="width:180px; height:180px; margin:20px 0;"><canvas id="donut"></canvas></div>
+            <div class="metrics-grid">
+                <div class="metric-card m-invested">
+                    <small id="lbl-m1">Invested</small>
+                    <div id="val-m1" style="color:var(--invested);">₹ 0</div>
+                </div>
+                <div class="metric-card m-profit">
+                    <small id="lbl-m2">Profit</small>
+                    <div id="val-m2" style="color:var(--returns);">₹ 0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="yearly-section">
+        <div class="chart-container">
+            <canvas id="bar"></canvas>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div>Built with ❤️ by <span class="author-name">RANJITHKUMAR</span></div>
+        <div>Version 3.5 (Mobile Optimized)</div>
+    </div>
+</div>
+
+<script>
+    let activeTab = 'sip';
+    let chartD = null, chartB = null, csv = [];
+
+    function showTab(t) {
+        activeTab = t;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.id === `btn-${t}`));
+        document.getElementById('wrap-step').style.display = (t === 'step') ? 'block' : 'none';
+        document.getElementById('box-s').style.display = (t === 'cagr') ? 'block' : 'none';
+        document.getElementById('wrap-r').style.display = (t === 'cagr') ? 'none' : 'block';
+        
+        const cfg = {
+            'sip': { p: 'Monthly Investment', res: 'Total Future Value', m1: 'Invested', m2: 'Returns' },
+            'step': { p: 'Starting Monthly SIP', res: 'Step-Up Wealth', m1: 'Invested', m2: 'Returns' },
+            'goal': { p: 'Target Goal Amount', res: 'Monthly SIP Required', m1: 'Total Invested', m2: 'Goal Profit' },
+            'fv': { p: 'Lump Sum Investment', res: 'Future Value', m1: 'Principal', m2: 'Gain' },
+            'cagr': { p: 'Initial Investment', res: 'Annualized CAGR', m1: 'Initial Capital', m2: 'Total Growth' }
+        };
+        document.getElementById('label-p').innerText = cfg[t].p;
+        document.getElementById('res-lbl').innerText = cfg[t].res;
+        document.getElementById('lbl-m1').innerText = cfg[t].m1;
+        document.getElementById('lbl-m2').innerText = cfg[t].m2;
+        load(); run();
+    }
+
+    function load() {
+        document.getElementById('in-p').value = localStorage.getItem(`${activeTab}-p`) || "";
+        document.getElementById('in-s').value = localStorage.getItem(`${activeTab}-s`) || "";
+        document.getElementById('sl-n').value = localStorage.getItem(`${activeTab}-n`) || 10;
+        document.getElementById('sl-r').value = localStorage.getItem(`${activeTab}-r`) || 12;
+        document.getElementById('sl-step').value = localStorage.getItem(`${activeTab}-stp`) || 10;
+    }
+
+    function clearTab() { localStorage.clear(); showTab(activeTab); }
+    function inr(v) { return new Intl.NumberFormat('en-IN').format(Math.round(v)); }
+
+    function toWords(num) {
+        if (!num || num <= 0) return "";
+        let a = ['', 'one ', 'two ', 'three ', 'four ', 'five ', 'six ', 'seven ', 'eight ', 'nine ', 'ten ', 'eleven ', 'twelve ', 'thirteen ', 'fourteen ', 'fifteen ', 'sixteen ', 'seventeen ', 'eighteen ', 'nineteen '];
+        let b = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+        const f = (n, s) => n > 0 ? (((n > 19) ? b[Math.floor(n/10)] + " " + a[n%10] : a[n]) + s) : "";
+        num = Math.round(num);
+        let res = f(Math.floor(num/10000000), " Crore ") + f(Math.floor((num/100000)%100), " Lakh ") + f(Math.floor((num/1000)%100), " Thousand ") + f(Math.floor((num/100)%10), " Hundred ");
+        if (num > 100 && num % 100 > 0) res += "and ";
+        res += f(num % 100, "");
+        return res.trim() + " Rupees Only";
+    }
+
+    function run() {
+        const p = parseFloat(document.getElementById('in-p').value) || 0;
+        const s = parseFloat(document.getElementById('in-s').value) || 0;
+        const n = parseInt(document.getElementById('sl-n').value);
+        const r = parseFloat(document.getElementById('sl-r').value);
+        const st = parseFloat(document.getElementById('sl-step').value);
+        
+        localStorage.setItem(`${activeTab}-p`, p);
+        localStorage.setItem(`${activeTab}-s`, s);
+        localStorage.setItem(`${activeTab}-n`, n);
+        localStorage.setItem(`${activeTab}-r`, r);
+        localStorage.setItem(`${activeTab}-stp`, st);
+
+        document.getElementById('val-n').innerText = `${n} Yrs`;
+        document.getElementById('val-r').innerText = `${r}%`;
+        document.getElementById('val-step').innerText = `${st}%`;
+
+        let totalW = 0, totalI = 0, invY = [], gainY = [], mR = (r/100)/12;
+        csv = [["Month", "Year", "Monthly", "Invested", "Profit", "Balance"]];
+
+        if (activeTab === 'sip') {
+            for(let m=1; m<=n*12; m++) {
+                totalW = (totalW + p) * (1 + mR); totalI += p;
+                csv.push([m, Math.ceil(m/12), p, totalI, (totalW-totalI).toFixed(0), totalW.toFixed(0)]);
+                if(m%12===0) { invY.push(totalI); gainY.push(totalW-totalI); }
+            }
+        } else if (activeTab === 'step') {
+            let curP = p;
+            for(let m=1; m<=n*12; m++) {
+                totalW = (totalW + curP) * (1 + mR); totalI += curP;
+                csv.push([m, Math.ceil(m/12), curP.toFixed(0), totalI, (totalW-totalI).toFixed(0), totalW.toFixed(0)]);
+                if(m%12===0) { invY.push(totalI); gainY.push(totalW-totalI); curP *= (1 + st/100); }
+            }
+        } else if (activeTab === 'goal') {
+            let requiredSIP = (p * mR) / ((Math.pow(1 + mR, n * 12) - 1) * (1 + mR));
+            for(let m=1; m<=n*12; m++) {
+                totalW = (totalW + requiredSIP) * (1 + mR); totalI += requiredSIP;
+                csv.push([m, Math.ceil(m/12), requiredSIP.toFixed(0), totalI.toFixed(0), (totalW-totalI).toFixed(0), totalW.toFixed(0)]);
+                if(m%12===0) { invY.push(totalI); gainY.push(totalW-totalI); }
+            }
+            document.getElementById('res-amt').innerText = "₹ " + inr(requiredSIP);
+            document.getElementById('res-words').innerText = toWords(requiredSIP);
+            document.getElementById('val-m1').innerText = "₹ " + inr(totalI);
+            document.getElementById('val-m2').innerText = "₹ " + inr(p - totalI);
+            updateGraphs(totalI, p - totalI, invY, gainY);
+            return;
+        } else if (activeTab === 'fv') {
+            totalW = p;
+            let annR = Math.pow(1 + r/100, 1/12) - 1;
+            for(let m=1; m<=n*12; m++) {
+                totalW *= (1 + annR);
+                csv.push([m, Math.ceil(m/12), (m==1?p:0), p, (totalW-p).toFixed(0), totalW.toFixed(0)]);
+                if(m%12===0) { invY.push(p); gainY.push(totalW-p); }
+            }
+        } else if (activeTab === 'cagr') {
+            if (p > 0 && s > 0 && n > 0) {
+                let cagr = (Math.pow((s / p), (1 / n)) - 1) * 100;
+                document.getElementById('res-amt').innerText = cagr.toFixed(2) + "%";
+                document.getElementById('res-words').innerText = "Compounded Annual Growth Rate";
+                document.getElementById('val-m1').innerText = "₹ " + inr(p);
+                document.getElementById('val-m2').innerText = "₹ " + inr(s - p);
+                let annR = Math.pow(1 + cagr/100, 1/12) - 1;
+                let tempW = p;
+                for(let m=1; m<=n*12; m++) {
+                    tempW *= (1 + annR);
+                    csv.push([m, Math.ceil(m/12), 0, p, (tempW-p).toFixed(0), tempW.toFixed(0)]);
+                    if(m%12===0) { invY.push(p); gainY.push(tempW-p); }
+                }
+                updateGraphs(p, s - p, invY, gainY);
+                return;
+            }
+        }
+        document.getElementById('res-amt').innerText = "₹ " + inr(totalW);
+        document.getElementById('res-words').innerText = toWords(totalW);
+        document.getElementById('val-m1').innerText = "₹ " + inr(invY[invY.length-1]);
+        document.getElementById('val-m2').innerText = "₹ " + inr(gainY[gainY.length-1]);
+        updateGraphs(invY[invY.length-1], gainY[gainY.length-1], invY, gainY);
+    }
+
+    function updateGraphs(v1, v2, iY, gY) {
+        if(chartD) chartD.destroy();
+        chartD = new Chart(document.getElementById('donut'), {
+            type: 'doughnut', data: { datasets: [{ data: [v1, Math.max(0, v2)], backgroundColor: ['#f97316', '#10b981'], borderWidth: 0, cutout: '75%' }] },
+            options: { maintainAspectRatio: false }
+        });
+        if(chartB) chartB.destroy();
+        chartB = new Chart(document.getElementById('bar'), {
+            type: 'bar', data: { labels: iY.map((_, i) => `Yr ${i+1}`), datasets: [{ label: 'Invested', data: iY, backgroundColor: '#f97316' }, { label: 'Profit', data: gY, backgroundColor: '#10b981' }] },
+            options: { maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true } }, plugins: { legend: { display: false } } }
+        });
+    }
+
+    function downloadExcel() {
+        const content = "data:text/csv;charset=utf-8," + csv.map(e => e.join(",")).join("\n");
+        const link = document.createElement("a");
+        link.setAttribute("href", encodeURI(content));
+        link.setAttribute("download", `Report_${activeTab.toUpperCase()}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+    window.onload = () => showTab('sip');
+</script>
+</body>
+</html>

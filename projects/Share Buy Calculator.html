@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Buy Calculator</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --primary-accent: #00e676;
+            --secondary-accent: #2979ff;
+            --text-main: #ffffff;
+            --text-dim: #b0b0b0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        h2 { text-align: center; color: var(--primary-accent); margin-bottom: 25px; }
+
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .input-group { margin-bottom: 15px; }
+
+        label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-dim); }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input:focus { border-color: var(--primary-accent); }
+
+        .result-box {
+            background: #252525;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid var(--primary-accent);
+        }
+
+        .result-line { display: flex; justify-content: space-between; margin-bottom: 5px; }
+
+        .highlight { color: var(--primary-accent); font-weight: bold; font-size: 1.1rem; }
+        
+        .blue-accent { border-left-color: var(--secondary-accent); }
+        .blue-text { color: var(--secondary-accent); }
+
+        .clear-btn {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: 1px solid #555;
+            color: #888;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Stock Calculator</h2>
+
+    <div class="section">
+        <label>Investment Amount (₹)</label>
+        <div class="input-group">
+            <input type="number" id="capital" placeholder="e.g. 10000" oninput="calcByCapital()">
+        </div>
+        <label>Share Price (₹)</label>
+        <div class="input-group">
+            <input type="number" id="price1" placeholder="e.g. 285" oninput="calcByCapital()">
+        </div>
+        <div class="result-box">
+            <div class="result-line"><span>Shares you can buy:</span> <span id="sharesResult" class="highlight">0</span></div>
+            <div class="result-line"><small>Remaining Cash:</small> <small id="remCash">₹0.00</small></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <label>Number of Shares</label>
+        <div class="input-group">
+            <input type="number" id="qty" placeholder="e.g. 100" oninput="calcByQty()">
+        </div>
+        <label>Share Price (₹)</label>
+        <div class="input-group">
+            <input type="number" id="price2" placeholder="e.g. 285" oninput="calcByQty()">
+        </div>
+        <div class="result-box blue-accent">
+            <div class="result-line"><span>Total Required:</span> <span id="totalCost" class="highlight blue-text">₹0.00</span></div>
+        </div>
+    </div>
+
+    <button class="clear-btn" onclick="clearAll()">Clear All Fields</button>
+</div>
+
+<script>
+    function formatINR(number) {
+        return new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+        }).format(number);
+    }
+
+    function calcByCapital() {
+        const capital = parseFloat(document.getElementById('capital').value) || 0;
+        const price = parseFloat(document.getElementById('price1').value) || 0;
+        
+        if (price > 0) {
+            const shares = Math.floor(capital / price);
+            const remaining = capital % price;
+            document.getElementById('sharesResult').innerText = shares;
+            document.getElementById('remCash').innerText = formatINR(remaining);
+        }
+    }
+
+    function calcByQty() {
+        const qty = parseFloat(document.getElementById('qty').value) || 0;
+        const price = parseFloat(document.getElementById('price2').value) || 0;
+        
+        const total = qty * price;
+        document.getElementById('totalCost').innerText = formatINR(total);
+    }
+
+    function clearAll() {
+        document.querySelectorAll('input').forEach(input => input.value = '');
+        document.getElementById('sharesResult').innerText = '0';
+        document.getElementById('remCash').innerText = '₹0.00';
+        document.getElementById('totalCost').innerText = '₹0.00';
+    }
+</script>
+
+</body>
+</html>

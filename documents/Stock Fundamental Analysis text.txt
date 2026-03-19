@@ -1,0 +1,46 @@
+📊 Stock Fundamental Analysis Prompt
+Analyze the following company In Tamil Language using a detailed fundamental & Techinical analysis model and give a clear investment verdict (BUY / HOLD / AVOID).
+Company Name: [Enter Stock Name]
+Stock Exchange: [NSE ]
+Investment Horizon: [Short / Medium / Long term – 3-5 years]
+Please analyze the company based on the following points:
+FUNDAMENTAL ANALYSIS 
+1.Market Capitalization & Company Size (Large / Mid / Small cap), 
+1.2. CMP vs 52  week high, low,  correction if any in%. 
+2.Business Model & Core Products / Services
+3.Industry Overview & Competitive Position
+4.Promoter Holding & Shareholding Pattern (Promoters, FIIs, DIIs, Public)
+5.Revenue, EBITDA & Net Profit growth Value (Last 5 years)
+6.EPS growth Value (Last 5 years) & Current EPS
+7.Return Ratios (ROE, ROCE, ROA)
+8.Debt-to-Equity Ratio & Interest Coverage
+9.Operating & Net Profit Margins
+10.Cash Flow Analysis (Operating, Investing, Financing)
+12.Valuation Metrics (PE, PB, EV/EBITDA vs Industry)
+13.Intrinsic Value (DCF / Graham Formula if possible)
+14.Dividend History in Rs & Dividend Yield 
+15.Asset Quality & Balance Sheet Strength
+16.Recent Corporate Actions / News / Risks
+*****TECHNICAL ANALYSIS (From TradingView Chart)****
+17. Overall trend on Daily & Weekly (Uptrend / Sideways / Downtrend)
+18. Price action structure (Higher High / Lower Low)
+19. Price vs 20 EMA, 50 EMA & 200 EMA
+20. RSI strength (Overbought / Neutral / Oversold)
+21. Fibonacci 
+22MACD / Momentum confirmation
+23. Volume analysis (Accumulation / Distribution)
+24. Major Support & Resistance zones
+
+Red Flags (If any)
+Final Output Required:
+-----------------------
+🔹 Final Output Required
+📈 Trend bias (Bullish / Neutral / Bearish)
+📈 Growth Potential (Low / Medium / High) 
+🎯 Best buy / accumulation zone (price range)
+🛑 Invalidation / stop-loss level
+✅ Key Strengths 
+⚠️ Risk level (Low / Medium / High)
+🏁 Final verdict: BUY / HOLD / AVOID
+🧠 Simple investor-friendly summary
+

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<title>Tamil Prompt Generator Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+<style>
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #0f172a;
+  color: #e5e7eb;
+  padding: 16px;
+  margin: 0;
+  line-height: 1.5;
+}
+.container { max-width: 600px; margin: auto; }
+h2 { text-align: center; color: #38bdf8; margin-bottom: 20px; }
+label { display: block; margin: 12px 0 6px; font-size: 13px; color: #94a3b8; }
+
+input, select, textarea, button {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  box-sizing: border-box;
+  outline: none;
+}
+
+input, select, textarea {
+  background: #020617;
+  color: #fff;
+}
+
+select { cursor: pointer; }
+
+textarea {
+  height: 350px;
+  margin-top: 15px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+}
+
+button {
+  background: #22c55e;
+  color: #022c22;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  margin-top: 15px;
+  transition: 0.2s;
+}
+button:hover { opacity: 0.9; }
+
+.copy { background: #38bdf8; margin-top: 8px; }
+.btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+.btn-slate { background: #64748b; color: white; }
+.btn-gold { background: #f59e0b; color: #451a03; }
+
+footer { text-align: center; margin-top: 20px; font-size: 12px; opacity: 0.6; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📊 Stock Prompt Master</h2>
+
+    <label>Select Report Type</label>
+    <select id="promptType">
+        <option value="kavout">Kavout Full Report (Tamil)</option>
+        <option value="gemini">16-Point Gemini Analysis (Tamil/Eng)</option>
+        <option value="quick">Stock Analysis FULL 25-POINT </option>
+        <option value="quick">Quick 5-Point Check (Tamil)</option>
+    </select>
+
+    <label>Stock Ticker</label>
+    <input id="stock" placeholder="e.g. RELIANCE, TCS, INFY" />
+
+    <button onclick="generate()">Generate Prompt</button>
+
+    <textarea id="output" placeholder="Generated prompt will appear here..."></textarea>
+
+    <button class="copy" onclick="copyText()">📋 Copy Prompt</button>
+
+    <div class="btn-group">
+        <button class="btn-slate" onclick="clearAll()">🔄 Clear</button>
+        <button class="btn-gold" onclick="downloadPrompt()">💾 Save As Text</button>
+    </div>
+
+    <footer>
+        Built for Long-term Investors • Cuddalore Finance Tools
+    </footer>
+</div>
+
+<script>
+const promptTemplates = {
+    kavout: (stock) => `You are a professional Indian stock market analyst and a certified-style financial advisor.
+
+Act like the AI platform “Kavout” and generate a full AI-based stock analysis report.
+
+Company Name: [ ${stock}]  
+Stock Exchange: NSE (India)  
+Investment Horizon: Long term (3–5 years / 5–10 years)
+
+Instructions:
+- Use both Fundamental Analysis and Technical Analysis.
+- Simulate a Kavout-style AI rating system with an “AI Score (1–9)”.
+- Then act like a personal Financial Advisor and give practical buy / hold / avoid guidance.
+- Write the entire result in **simple Tamil language**.
+
+Output must include the following sections:
+
+━━━━━━━━━━━━━━━━━━━━
+1️⃣ BASIC DETAILS  
+- Stock Name  
+- Sector  
+- Current Market Price (CMP – latest available)  
+- Market Cap category (Large / Mid / Small cap)  
+
+━━━━━━━━━━━━━━━━━━━━
+2️⃣ 🤖 KAVOUT-STYLE AI ANALYSIS  
+
+Include a table with:
+
+- AI Score (1 – 9)  
+- Outperformance Probability (%)  
+- Fundamental Signal (Strong / Medium / Weak)  
+- Technical Momentum (Bullish / Neutral / Bearish)  
+- Valuation Signal (Cheap / Fair / Expensive)  
+- Risk Level (Low / Medium / High)  
+- Category (Stable Compounder / Multibagger / High Risk)  
+
+━━━━━━━━━━━━━━━━━━━━
+3️⃣ 📊 FUNDAMENTAL ANALYSIS (Tamil)  
+
+Explain clearly:
+- Business model & sector outlook  
+- Revenue growth & Profit growth (3–5 years)  
+- ROE, ROCE, Margins  
+- Debt position & balance sheet strength  
+- Promoter / institutional holding trend  
+- Competitive advantage  
+
+Give a final **Fundamental Strength Rating: High / Medium / Low**
+
+━━━━━━━━━━━━━━━━━━━━
+4️⃣ 📈 TECHNICAL ANALYSIS (Tamil)  
+
+Include:
+- Trend (Uptrend / Sideways / Downtrend)  
+- 50 EMA & 200 EMA status (Above / Below / Near)  
+- Support & Resistance levels  
+- Momentum view (Breakout / Consolidation / Weak)  
+- Long-term chart outlook  
+
+Give a final **Technical Trend Rating: Bullish / Neutral / Bearish**
+
+━━━━━━━━━━━━━━━━━━━━
+5️⃣ 💡 FINANCIAL ADVISOR VIEW (Tamil)  
+
+Act like a real financial advisor and explain:
+- Is this stock suitable for long-term wealth creation?  
+- Who should invest (Conservative / Moderate / Aggressive investors)?  
+- Key risks (sector risk, cyclic risk, company risk)  
+- Portfolio allocation suggestion (%)  
+
+━━━━━━━━━━━━━━━━━━━━
+6️⃣ 🛒 BUYING STRATEGY & TARGETS  
+
+Provide:
+- Ideal Buy Zone (price range)  
+- Accumulation strategy (Lumpsum / SIP / Dip buying)  
+- 1-Year Target Price  
+- 3-Year Target Price  
+- 5-Year Target Price (Conservative & Aggressive)  
+
+━━━━━━━━━━━━━━━━━━━━
+7️⃣ 🏁 FINAL VERDICT (VERY IMPORTANT)  
+
+Give:
+- Final Recommendation: Strong Buy / Buy / Hold / Avoid  
+- Reason in 3–4 simple Tamil points  
+- One-line summary:  
+  “இந்த பங்கு ____ வகை முதலீட்டாளர்களுக்கு ஏற்றது.”
+
+Rules:
+- Be realistic (no hype targets).  
+- Combine both fundamental + technical before verdict.  
+- Clearly mention risk.  
+- Language must be ** simple Tamil**.  
+- Format neatly with headings and tables.
+━━━━━━━━━━━━━━━━━━━━
+8️⃣ 📱 WHATSAPP INVESTOR SUMMARY (AUTO-GENERATED)
+
+After completing the full analysis above, generate a
+“WhatsApp-friendly investor summary” in simple Tamil.
+
+Include only key points:
+- 📌 Stock Name & Sector
+- 💰 CMP (Current Market Price)
+- 📊 P/E Ratio & Valuation view (Cheap / Fair / Expensive)
+- 📈 Trend (Bullish / Neutral / Bearish)
+- 🧠 Fundamental Strength (High / Medium / Low)
+- ⚠️ Risk Level
+- 🛒 Buy / Hold / Avoid suggestion
+- 🎯 Long-term view (one simple line)
+
+Rules:
+- Very short & crisp
+- Bullet points only
+- No heavy theory
+- Suitable for common retail investors
+- No hype, realistic tone
+
+End with one clear conclusion line:
+“இந்த பங்கு நீண்டகால முதலீட்டுக்கு ____ வகை முதலீட்டாளர்களுக்கு ஏற்றது.”.`,
+
+    // FIXED: Key name changed to 'gemini' for easier coding
+    gemini: (stock) => `Please perform a comprehensive 16-point Fundamental and Technical analysis for [${stock}] for a long-term investment horizon. 
+
+​"Please perform a comprehensive 16-point Fundamental and Technical analysis for [${stock}] for a long-term investment horizon. 
+"CRITICAL: Before generating the analysis, use your search/real-time tools to fetch the EXACT Today's Current Market Price (CMP) as of Exact Today, for [${stock}]. Ensure you include the 52-week High/Low, current RSI, and position relative to the 50-day and 200-day EMA based on the latest available candles. Do not use training data prices; use only the live data fetched today to ensure 100% accuracy in Valuation and Margin of Safety calculations." Please provide the response in Tamil and include the following details:
+​1. Business Overview: Company Type, Company's core business and market position.
+2. Valuation: Current P/E vs 5-year average P/E and Intrinsic Value (Graham Number/DCF).
+3. Profitability: Revenue and Net Profit growth over the last 5 years, Show Year wise Number.
+4. Debt: Debt-to-Equity ratio and Interest Coverage ratio.
+5. Efficiency: ROE (Return on Equity) and ROCE (Return on Capital Employed).
+6. Shareholding: Promoter holding changes and FII/DII interest. Show me in Number
+7. Competitive Advantage: What is the company's 'Moat'?
+8. Cash Flow: Is the company generating positive Free Cash Flow?
+9. Technical Levels: Major Support and Resistance levels on Weekly/Monthly charts.
+10. Moving Averages: Position relative to 50-day and 200-day EMA.
+11. RSI & Indicators: Current momentum status.
+12. Dividend History: Dividend yield and consistency. Show me in Number 
+13. Risks: Key threats to the business.
+14. Future Outlook: Sector growth potential.
+15. Final Verdict: Is it currently at a 'Good Entry Price' or 'Overvalued'?
+16. Margin of Safety: How much discount is available from its all-time high?"
+
+At the end of the analysis, please generate a 'WhatsApp Short Message Summary' in the following format:
+Analyze everything from Business Moat, P/E, Net Profit, Debt, to RSI and Support levels. 📊
+Finally, generate a 'WhatsApp Short Message Summary' using this exact format:
+🚀 Stock Name: [Name]
+💰 Current Price: [Price]
+💎 Valuation (P/E): [Value] (Compare with Sector P/E)
+📊 Key Financials (In Numbers):
+📈 Profitability: ₹[Value] Crores ([Growth]% Growth) 💸
+💰 Dividend: [Yield]% (₹[Amount] per share) 🏦
+🛡️ Asset Quality/ROE: [Value]% 🔍
+🧱 Business Moat: [One line about strength] 🏰
+🎯 Verdict: [Buy/Wait/Avoid] ✅
+📉 Entry Range: ₹[Price] - ₹[Price] 🛒
+🚀 Target: ₹[Target Price] (Long term) 🏹
+⚠️ Key Risk: [Main risk factor] 🚩
+[Add a catchy one-liner closing about the stock] 🌟".`,
+
+ quick: (stock) => `பங்கு: ${stock}. இந்த பங்கின் 5 முக்கிய விவரங்களை மட்டும் எளிய தமிழில் வழங்கவும்:
+Analyze the following company using the FULL 25-POINT professional stock research model.
+
+Company Name: <ENTER COMPANY NAME>
+
+Analyze using:
+
+1. Market Capitalization
+2. Total Number of Shares / Equity Structure
+3. Shareholding Pattern (Promoter, FII, DII, Public)
+4. Revenue / Total Income (last 5 years)
+5. Net Profit (last 5 years)
+6. EPS Growth (5 years)
+7. PE Ratio (vs Industry + Historical)
+8. Price-to-Book (P/B) and Book Value analysis
+9. 5-Year & Lifetime Chart Pattern (CAGR, highs/lows, trend strength)
+10. Interest / Total Expenses / Depreciation trend
+11. Gross NPA / Net NPA (if Bank/NBFC)
+12. Company Growth (5-year CAGR: Sales, Profit)
+13. Free Cash Flow (FCF) trend and strength
+14. Moat Analysis (Brand, Cost, Scale, Tech, Distribution)
+15. Debt Structure + Interest Coverage Ratio (ICR)
+16. Management Quality & Capital Allocation quality
+17. Insider & Promoter Buying/Selling Trend
+18. Institutional Confidence (FII/DII trend)
+19. Segmental Growth + Industry Opportunity (TAM)
+20. Risk Factors (Macro + Sector + Company Specific)
+21. PEG Ratio (Valuation vs Growth check)
+22. Dividend Track Record & Payout Quality
+23. ROE/ROCE (5-year trend)
+24. Working Capital Cycle & Cash Conversion
+25. Intrinsic Value (DCF + Graham + Relative Valuation)
+
+Final Output:
+
+- Full 25-point table
+- Deep explanation for each point
+- Lifetime chart interpretation (easy words)
+- Tamil Summary (clear & simple)
+- Final Verdict: BUY / HOLD / AVOID
+- Buy Range, Risk Level, Target Range (3–5 yrs).`
+,
+    quic: (stock) => `பங்கு: ${stock}. இந்த பங்கின் 5 முக்கிய விவரங்களை மட்டும் எளிய தமிழில் வழங்கவும்:
+1. தற்போதைய நிலை.
+2. லாப வளர்ச்சி (Profit Growth).
+3. கடன் அளவு (Debt).
+4. முக்கிய சப்போர்ட் (Support Level).
+5. ஒரு வரி முடிவு (Final Verdict).`
+};
+
+function generate() {
+    const stockInput = document.getElementById("stock");
+    const stock = stockInput.value.trim().toUpperCase();
+    const type = document.getElementById("promptType").value;
+
+    if (!stock) {
+        alert("Please enter a stock name!");
+        return;
+    }
+
+    const selectedTemplate = promptTemplates[type];
+    
+    if (selectedTemplate) {
+        document.getElementById("output").value = selectedTemplate(stock);
+    } else {
+        alert("Template not found!");
+    }
+}
+
+function copyText() {
+    const text = document.getElementById("output");
+    if (!text.value) return;
+    text.select();
+    document.execCommand("copy");
+    alert("Copied to clipboard!");
+}
+
+function clearAll() {
+    if(confirm("Clear everything?")) {
+        document.getElementById("stock").value = "";
+        document.getElementById("output").value = "";
+    }
+}
+
+function downloadPrompt() {
+    const stock = document.getElementById("stock").value || "Stock";
+    const text = document.getElementById("output").value;
+    if (!text) return alert("Nothing to save!");
+
+    const blob = new Blob([text], {type: 'text/plain'});
+    const elem = window.document.createElement('a');
+    elem.href = window.URL.createObjectURL(blob);
+    elem.download = `${stock}_Prompt.txt`;
+    document.body.appendChild(elem);
+    elem.click();
+    document.body.removeChild(elem);
+}
+</script>
+
+</body>
+</html>

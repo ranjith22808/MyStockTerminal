@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<title>Gemini Tamil Prompt Generator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+<style>
+body {
+  font-family: 'Arial', sans-serif;
+  background: #0f172a;
+  color: #e5e7eb;
+  padding: 16px;
+  margin: 0;
+}
+h2 {
+  text-align: center;
+  color: #38bdf8;
+}
+input, textarea, button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: none;
+  box-sizing: border-box;
+}
+input {
+  background: #020617;
+  color: #fff;
+  border: 1px solid #334155;
+}
+textarea {
+  height: 420px;
+  background: #020617;
+  color: #e5e7eb;
+  border: 1px solid #334155;
+  font-family: 'Arial', sans-serif;
+}
+button {
+  background: #22c55e;
+  color: #022c22;
+  font-weight: bold;
+  cursor: pointer;
+}
+button.copy {
+  background: #38bdf8;
+  margin-top: 6px;
+}
+.btn-slate { background: #64748b; color: white; }
+.btn-gold { background: #f59e0b; color: #451a03; }
+
+.btn-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+footer {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 12px;
+  opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<h2>📊 Kavout Tamil Prompt Generator</h2>
+
+<input id="stock" placeholder="பங்கு பெயரை உள்ளிடவும் (எ.கா. TCS)" />
+
+<button onclick="generate()">Generate Prompt</button>
+
+<textarea id="output" placeholder="உங்கள் மென்பொருள் அறிக்கை இங்கே தோன்றும்..."></textarea>
+
+<button class="copy" onclick="copyText()">📋 Copy Prompt</button>
+
+<div class="btn-group">
+    <button class="btn-slate" onclick="clearAll()">🔄 Clear</button>
+    <button class="btn-gold" onclick="downloadPrompt()">💾 Save Text</button>
+</div>
+
+<footer>
+Built for long-term investors • எளிய தமிழ் • No hype
+</footer>
+
+<script>
+function generate() {
+  const stock = document.getElementById("stock").value.trim().toUpperCase();
+  if (!stock) {
+    alert("தயவுசெய்து பங்கின் பெயரை உள்ளிடவும்");
+    return;
+  }
+
+  const prompt = `
+You are a professional Indian stock market analyst and a certified-style financial advisor.
+
+Act like the AI platform “Kavout” and generate a full AI-based stock analysis report.
+
+Company Name: ${stock}
+Stock Exchange: NSE (India)
+Investment Horizon: Long term (3–5 years / 5–10 years)
+Language Note: All analysis and explanations must be in "Easy Tamil" (எளிமையான தமிழ்). Avoid English script where possible.
+
+━━━━━━━━━━━━━━━━━━━━
+1️⃣ BASIC DETAILS
+- Stock Name
+- Sector
+- Current Market Price (CMP – latest available)
+- Market Cap category (Large / Mid / Small cap)
+
+━━━━━━━━━━━━━━━━━━━━
+2️⃣ 🤖 KAVOUT-STYLE AI ANALYSIS
+
+Include a table with:
+- AI Score (1 – 9)
+- Outperformance Probability (%)
+- Fundamental Signal (Strong / Medium / Weak)
+- Technical Momentum (Bullish / Neutral / Bearish)
+- Valuation Signal (Cheap / Fair / Expensive)
+- Risk Level (Low / Medium / High)
+- Category (Stable Compounder / Multibagger / High Risk)
+
+━━━━━━━━━━━━━━━━━━━━
+3️⃣ 📊 FUNDAMENTAL ANALYSIS (எளிய தமிழில்)
+
+for a long-term investment horizon. Please provide the response in Tamil and include the following details:
+​1. Business Overview: Company's core business and market position.
+2. Valuation: Current P/E vs 5-year average P/E and Intrinsic Value (Graham Number/DCF).Show the value in numbers.
+3. Profitability: Revenue and Net Profit growth over the last 5 years, Show Year wise Number.
+4. Debt: Debt-to-Equity ratio and Interest Coverage ratio.
+5. Efficiency: ROE (Return on Equity) and ROCE (Return on Capital Employed).
+6. Shareholding: Promoter holding changes and FII/DII interest.
+7. Competitive Advantage: What is the company's 'Moat'?
+8. Cash Flow: Is the company generating positive Free Cash Flow?
+9. Technical Levels: Major Support and Resistance levels on Weekly/Monthly charts.
+10. Moving Averages: Position relative to 50-day and 200-day EMA.
+11. RSI & Indicators: Current momentum status.
+12. Dividend History: Dividend yield and consistency.Show the value in numbers.
+13. Risks: Key threats to the business.
+14. Future Outlook: Sector growth potential.
+15. Final Verdict: Is it currently at a 'Good Entry Price' or 'Overvalued'?
+16. Margin of Safety: How much discount is available from its all-time high?"
+Final Fundamental Strength Rating: High / Medium / Low
+
+━━━━━━━━━━━━━━━━━━━━
+4️⃣ 📈 TECHNICAL ANALYSIS (எளிய தமிழில்)
+
+- Trend (Uptrend / Sideways / Downtrend)
+- 50 EMA & 200 EMA status
+- Support & Resistance levels (முக்கிய ஆதரவு மற்றும் தடை நிலைகள்)
+- Momentum view
+- Long-term chart outlook
+
+Final Technical Trend Rating: Bullish / Neutral / Bearish
+
+━━━━━━━━━━━━━━━━━━━━
+5️⃣ 💡 FINANCIAL ADVISOR VIEW (எளிய தமிழில்)
+
+- Long-term wealth suitability (நீண்ட கால முதலீட்டிற்கு ஏற்றதா?)
+- Investor type (எந்த வகையான முதலீட்டாளர்களுக்கு ஏற்றது?)
+- Key risks (முக்கிய அபாயங்கள்)
+- Portfolio allocation %
+
+- SWOT Analysis in Tamil:
+  - Strengths (பலங்கள்)
+  - Weaknesses (பலவீனங்கள்)
+  - Opportunities (வாய்ப்புகள்)
+  - Threats (அச்சுறுத்தல்கள்)
+
+━━━━━━━━━━━━━━━━━━━━
+6️⃣ 🛒 BUYING STRATEGY & TARGETS
+
+- Ideal Buy Zone
+- Accumulation strategy
+- 1Y / 3Y / 5Y Targets (Conservative & Aggressive)
+
+━━━━━━━━━━━━━━━━━━━━
+7️⃣ 🏁 FINAL VERDICT (எளிய தமிழில்)
+
+- Recommendation (பரிந்துரை)
+- 3–4 Tamil reasons (3-4 முக்கிய காரணங்கள்)
+- One-line investor summary (முதலீட்டாளர்களுக்கான ஒரு வரி சுருக்கம்)
+
+━━━━━━━━━━━━━━━━━━━━
+8️⃣ 📱 WHATSAPP INVESTOR SUMMARY (Tamil)
+
+At the end of the analysis, please generate a 'WhatsApp Short Message Summary' in the following format:
+Analyze everything from Business Moat, P/E, Net Profit, Debt, to RSI and Support levels. 📊
+Finally, generate a 'WhatsApp Short Message Summary' using this exact format:
+🚀 Stock Name: [Name]
+💰 Current Price: [Price]
+💎 Valuation (P/E): [Value] (Compare with Sector P/E)
+📊 Key Financials (In Numbers):
+📈 Profitability: ₹[Value] Crores ([Growth]% Growth) 💸
+💰 Dividend: [Yield]% (₹[Amount] per share) 🏦
+🛡️ Asset Quality/ROE: [Value]% 🔍
+🧱 Business Moat: [One line about strength] 🏰
+🎯 Verdict: [Buy/Wait/Avoid] ✅
+📉 Entry Range: ₹[Price] - ₹[Price] 🛒
+🚀 Target: ₹[Target Price] (Long term) 🏹
+⚠️ Key Risk: [Main risk factor] 🚩
+[Add a catchy one-liner closing about the stock] 🌟"
+`;
+
+  document.getElementById("output").value = prompt;
+}
+
+function copyText() {
+  const text = document.getElementById("output");
+  if (!text.value) return;
+  text.select();
+  document.execCommand("copy");
+  alert("Prompt நகலெடுக்கப்பட்டது!");
+}
+
+function clearAll() {
+    if(confirm("அனைத்தையும் அழிக்க வேண்டுமா?")) {
+        document.getElementById("stock").value = "";
+        document.getElementById("output").value = "";
+    }
+}
+
+function downloadPrompt() {
+    const stock = document.getElementById("stock").value.trim() || "Stock";
+    const text = document.getElementById("output").value;
+    if (!text) return alert("முதலில் ஒரு Prompt-ஐ உருவாக்கவும்!");
+
+    const blob = new Blob([text], {type: 'text/plain'});
+    const elem = window.document.createElement('a');
+    elem.href = window.URL.createObjectURL(blob);
+    elem.download = `${stock}_Kavout_Tamil_Prompt.txt`;
+    document.body.appendChild(elem);
+    elem.click();
+    document.body.removeChild(elem);
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<title>Tamil Prompt Generator Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e5e7eb; padding: 16px; margin: 0; }
+.container { max-width: 600px; margin: auto; }
+h2 { text-align: center; color: #38bdf8; }
+label { display: block; margin: 12px 0 6px; font-size: 13px; color: #94a3b8; }
+input, select, textarea, button { width: 100%; padding: 12px; font-size: 15px; border-radius: 8px; border: 1px solid #334155; box-sizing: border-box; outline: none; background: #020617; color: #fff; }
+textarea { height: 300px; margin-top: 15px; font-family: monospace; font-size: 13px; }
+button { background: #22c55e; color: #022c22; font-weight: bold; cursor: pointer; border: none; margin-top: 15px; }
+.copy { background: #38bdf8; margin-top: 8px; }
+footer { text-align: center; margin-top: 20px; font-size: 12px; opacity: 0.6; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📊 Stock Prompt Master</h2>
+    <label>Select Analysis Type</label>
+    <select id="promptType">
+       
+        <option value="gemani_promt_detail_with_16points">Gemani Promt Detail With 16Points</option>
+        <option value="kimi_deep_stock_analysis_prompt">KIMI DEEP STOCK ANALYSIS PROMPT</option>
+        <option value="kimi_investor_profile_based">KIMI Investor Profile Based</option>
+        <option value="kimi_quick_analysis">KIMI Quick Analysis</option>
+        <option value="kimi_sector-specific_analyze">KIMI Sector-Specific Analyze</option>
+        <option value="master_prompt_–_kavout-style">MASTER PROMPT – Kavout-Style</option>
+        <option value="stock_analysis_full_25-point">Stock Analysis FULL 25-POINT</option>
+        <option value="stock_fundamental_analysis_prompt">Stock Fundamental Analysis Prompt</option>
+        <option value="whatsapp_short_analayz">Whatsapp Short Analayz</option>
+        <option value="📊_technical_+_fundamental_analysis_prompt_(professional)">📊 Technical + Fundamental Analysis Prompt (Professional)</option>
+        
+    </select>
+
+    <label>Stock Ticker</label>
+    <input id="stock" placeholder="e.g. RELIANCE, TCS" />
+    <button onclick="generate()">Generate Prompt</button>
+    <textarea id="output"></textarea>
+    <button class="copy" onclick="copyText()">📋 Copy Prompt</button>
+    <footer>Built for Long-term Investors • Cuddalore Tools</footer>
+</div>
+
+<script>
+const promptTemplates = {
+    kavout: (stock) => `Analyze ${stock} in Easy Tamil using Kavout style...`,
+    gemini: (stock) => `Perform 16-point analysis for ${stock}...`,
+        "gemani_promt_detail_with_16points": (stock) => `​🚀 Best Stock Analysis Prompt (Copy & Paste this)
+​"Please perform a comprehensive 16-point Fundamental and Technical analysis for ${stock} for a long-term investment horizon. "CRITICAL: Before generating the analysis, use your search/real-time tools to fetch the EXACT Today's Current Market Price (CMP) as of Exact Today, for ${stock}. Ensure you include the 52-week High/Low, current RSI, and position relative to the 50-day and 200-day EMA based on the latest available candles. Do not use training data prices; use only the live data fetched today to ensure 100% accuracy in Valuation and Margin of Safety calculations." Please provide the response in Tamil and include the following details:
+​1. Business Overview: Company Type, Company's core business and market position.
+2. Valuation: Current P/E vs 5-year average P/E and Intrinsic Value (Graham Number/DCF).
+3. Profitability: Revenue and Net Profit growth over the last 5 years, Show Year wise Number.
+4. Debt: Debt-to-Equity ratio and Interest Coverage ratio.
+5. Efficiency: ROE (Return on Equity) and ROCE (Return on Capital Employed).
+6. Shareholding: Promoter holding changes and FII/DII interest. Show me in Number
+7. Competitive Advantage: What is the company's 'Moat'?
+8. Cash Flow: Is the company generating positive Free Cash Flow?
+9. Technical Levels: Major Support and Resistance levels on Weekly/Monthly charts.
+10. Moving Averages: Position relative to 50-day and 200-day EMA.
+11. RSI & Indicators: Current momentum status.
+12. Dividend History: Dividend yield and consistency. Show me in Number 
+13. Risks: Key threats to the business.
+14. Future Outlook: Sector growth potential.
+15. Final Verdict: Is it currently at a 'Good Entry Price' or 'Overvalued'?
+16. Margin of Safety: How much discount is available from its all-time high?"
+
+At the end of the analysis, please generate a 'WhatsApp Short Message Summary' in the following format:
+Analyze everything from Business Moat, P/E, Net Profit, Debt, to RSI and Support levels. 📊
+Finally, generate a 'WhatsApp Short Message Summary' using this exact format:
+🚀 Stock Name: ${stock} in Bold Letter
+💰 Current Price: [Price]
+💎 Valuation (P/E): [Value] (Compare with Sector P/E)
+💎 EPS( Earning Per Share):[Value]
+📊 Key Financials (In Numbers):
+📈 Profitability: ₹[Value] Crores ([Growth]% Growth) 💸
+💰 Dividend: [Yield]% (₹[Amount] per share) 🏦
+🛡️ Asset Quality/ROE: [Value]% 🔍
+🧱 Business Moat: [One line about strength] 🏰
+🎯 Verdict: [Buy/Wait/Avoid] ✅
+📉 Entry Range: ₹[Price] - ₹[Price] 🛒
+🚀 Target: ₹[Target Price] (Long term) 🏹
+⚠️ Key Risk: [Main risk factor] 🚩
+[Add a catchy one-liner closing about the stock] 🌟"`,
+    "kimi_deep_stock_analysis_prompt": (stock) => `You are an expert stock market analyst with 20+ years of experience in fundamental and technical analysis. Create a comprehensive deep analysis report for ${stock} (Ticker: ${stock}) listed on NSE/BSE.
+
+STRUCTURE YOUR ANALYSIS AS FOLLOWS:
+
+## 1. COMPANY OVERVIEW
+- Brief introduction and business model
+- Key products/services and revenue segments
+- Competitive advantages and market position
+- Management quality and promoter holding
+
+## 2. TECHNICAL ANALYSIS
+Include these metrics:
+- Current price, 52-week high/low, all-time high/low
+- Distance from 52-week high/low (%)
+- 1-year, 2-year, 3-year returns
+- RSI (14-period) with interpretation
+- 50-day/200-day moving averages with trend analysis
+- MACD signal (Bullish/Bearish)
+- Support and resistance levels
+- Volume analysis
+
+Create visualization suggestions for:
+- Price chart with moving averages
+- RSI indicator
+- MACD
+- Bollinger Bands
+- Volume trends
+
+## 3. FUNDAMENTAL ANALYSIS
+Provide 5-year financial trend:
+- Revenue growth (FY2021-FY2025)
+- Net profit growth
+- EBITDA margins
+- ROE, ROCE
+- Debt/Equity ratio
+- Cash position
+
+Include:
+- P/E, P/B, EV/EBITDA ratios vs industry average
+- Valuation assessment (Undervalued/Fair/Premium)
+- Order book position (if applicable)
+- Segment-wise revenue breakup
+
+## 4. RECENT DEVELOPMENTS & CATALYSTS
+- Major order wins (last 6-12 months)
+- New business initiatives
+- Expansion plans
+- Government policies affecting the sector
+- Any mergers/acquisitions/JVs
+
+## 5. RISK ANALYSIS
+Identify and rate (Low/Medium/High):
+- Sector-specific risks
+- Company-specific risks
+- Financial risks
+- Regulatory risks
+- Competition risks
+
+## 6. INVESTMENT RECOMMENDATION
+
+Provide clear recommendation:
+- Short-term (6-12 months): Buy/Hold/Sell
+- Medium-term (1-2 years): Buy/Hold/Sell  
+- Long-term (3+ years): Buy/Hold/Sell
+
+Include:
+- Investment grade (1-5 stars)
+- Best buying price range
+- Current price vs fair value
+- Target prices (12-month, 24-month)
+- Stop loss level
+- Portfolio allocation suggestion
+- SIP strategy if applicable
+
+## 7. COMPARISON WITH PEERS
+Compare with 2-3 competitors on:
+- Valuation metrics
+- Growth rates
+- Profitability ratios
+- Market share
+
+## 8. CONCLUSION
+- Summary of bull case (positive factors)
+- Summary of bear case (risks/concerns)
+- Final verdict with conviction level
+
+FORMAT REQUIREMENTS:
+- Use tables for numerical comparisons
+- Include emojis for visual appeal (✅ ⚠️ 🔴 🟢 🚀)
+- Provide both percentage and absolute values
+- Add disclaimer at the end
+- Language: [Tamil/English/Hindi]
+
+DATA REQUIREMENTS:
+Use Yahoo Finance data via get_data_source for:
+- Stock info
+- Historical prices (5 years, weekly)
+- Income statement
+- Balance sheet
+- Cash flow
+- Analyst recommendations
+- Recent news
+
+Create matplotlib visualizations for:
+- Technical analysis dashboard (4-6 charts)
+- Fundamental analysis dashboard (4-6 charts)
+- Business segment breakdown
+- Risk assessment matrix`,
+    "kimi_investor_profile_based": (stock) => `Analyze ${stock} ([TICKER]) for [INVESTOR TYPE]:
+
+INVESTOR PROFILE: [Conservative/Moderate/Aggressive]
+
+ANALYSIS FOCUS:
+[For Conservative]:
+- Dividend yield and history
+- Debt-free status or low leverage
+- Market leadership and moat
+- Consistent profitability (10+ years)
+- Blue-chip status
+
+[For Moderate]:
+- Balance of growth and stability
+- Reasonable valuation (P/E < sector avg)
+- ROE > 15% consistently
+- Manageable debt levels
+- Medium-term growth visibility
+
+[For Aggressive]:
+- High growth potential (20%+ revenue growth)
+- New business initiatives/expansion
+- Turnaround story or cyclical recovery
+- Higher risk-reward ratio
+- Small/Mid cap with scalability
+
+CUSTOM RECOMMENDATION:
+- Suitability for investor profile (1-10 score)
+- Position sizing suggestion
+- Entry strategy (Lumpsum/SIP)
+- Exit milestones
+- Portfolio fit assessment
+
+Include risk-adjusted return projections.
+Language: [Tamil/English]`,
+    "kimi_quick_analysis": (stock) => `Analyze ${stock} (${stock}) and provide:
+
+📊 TECHNICAL SNAPSHOT:
+- Current Price vs 52W High/Low
+- Key moving averages (50/200 DMA)
+- RSI and MACD status
+- Support/Resistance levels
+
+💰 FUNDAMENTAL SNAPSHOT:
+- Revenue & Profit CAGR (3-year)
+- ROE, ROCE, Debt/Equity
+- P/E, P/B vs Industry
+- Cash position
+
+📈 CATALYSTS:
+- Top 3 growth drivers
+- Recent order wins/news
+- Sector tailwinds
+
+⚠️ RISKS:
+- Top 3 risk factors
+- Valuation concerns
+
+🎯 VERDICT:
+- Recommendation (Strong Buy/Buy/Hold/Sell)
+- Target price (12-month)
+- Best entry price
+- Stop loss
+
+Include 2 visualization dashboards using matplotlib.
+Language: [Tamil/English]`,
+    "kimi_sector-specific_analyze": (stock) => `Perform deep analysis of ${stock} ([TICKER]) in [SECTOR] sector:
+
+SECTOR CONTEXT:
+- Industry size and growth outlook
+- Government policies and initiatives
+- Competitive landscape
+- Key trends (digitalization, EV, etc.)
+
+COMPANY ANALYSIS:
+- Market share and positioning
+- Unique strengths vs competitors
+- Order book and execution capability
+- Working capital management
+
+SECTOR-SPECIFIC METRICS:
+- [For Infra: Order book/Revenue ratio, Execution timeline]
+- [For Banking: NIM, GNPA, PCR, CASA]
+- [For IT: Client concentration, Attrition, Utilization]
+- [For Auto: Volume growth, Market share, EV transition]
+- [For FMCG: Volume growth, Pricing power, Distribution]
+
+VALUATION:
+- Sector-appropriate valuation metrics
+- Historical valuation bands
+- Peer comparison within sector
+
+Include sector-specific visualizations.
+Language: [Tamil/English]`,
+    "master_prompt_–_kavout-style": (stock) => `🧠📊 MASTER PROMPT – Kavout-Style AI + Financial Advisor (Tamil Output)
+
+
+You are a professional Indian stock market analyst and a certified-style financial advisor.
+
+Act like the AI platform “Kavout” and generate a full AI-based stock analysis report.
+
+Company Name: ${stock} 
+Stock Exchange: NSE (India)  
+Investment Horizon: Long term (3–5 years / 5–10 years)
+
+Instructions:
+- Use both Fundamental Analysis and Technical Analysis.
+- Simulate a Kavout-style AI rating system with an “AI Score (1–9)”.
+- Then act like a personal Financial Advisor and give practical buy / hold / avoid guidance.
+- Write the entire result in **simple Tamil language**.
+
+Output must include the following sections:
+
+━━━━━━━━━━━━━━━━━━━━
+1️⃣ BASIC DETAILS  
+- Stock Name  
+- Sector  
+- Current Market Price (CMP – latest available)  
+- Market Cap category (Large / Mid / Small cap)  
+
+━━━━━━━━━━━━━━━━━━━━
+2️⃣ 🤖 KAVOUT-STYLE AI ANALYSIS  
+
+Include a table with:
+
+- AI Score (1 – 9)  
+- Outperformance Probability (%)  
+- Fundamental Signal (Strong / Medium / Weak)  
+- Technical Momentum (Bullish / Neutral / Bearish)  
+- Valuation Signal (Cheap / Fair / Expensive)  
+- Risk Level (Low / Medium / High)  
+- Category (Stable Compounder / Multibagger / High Risk)  
+
+━━━━━━━━━━━━━━━━━━━━
+3️⃣ 📊 FUNDAMENTAL ANALYSIS (Tamil)  
+
+Explain clearly:
+- Business model & sector outlook  
+- Revenue growth & Profit growth (3–5 years)  
+- ROE, ROCE, Margins  
+- Debt position & balance sheet strength  
+- Promoter / institutional holding trend  
+- Competitive advantage  
+
+Give a final **Fundamental Strength Rating: High / Medium / Low**
+
+━━━━━━━━━━━━━━━━━━━━
+4️⃣ 📈 TECHNICAL ANALYSIS (Tamil)  
+
+Include:
+- Trend (Uptrend / Sideways / Downtrend)  
+- 50 EMA & 200 EMA status (Above / Below / Near)  
+- Support & Resistance levels  
+- Momentum view (Breakout / Consolidation / Weak)  
+- Long-term chart outlook  
+
+Give a final **Technical Trend Rating: Bullish / Neutral / Bearish**
+
+━━━━━━━━━━━━━━━━━━━━
+5️⃣ 💡 FINANCIAL ADVISOR VIEW (Tamil)  
+
+Act like a real financial advisor and explain:
+- Is this stock suitable for long-term wealth creation?  
+- Who should invest (Conservative / Moderate / Aggressive investors)?  
+- Key risks (sector risk, cyclic risk, company risk)  
+- Portfolio allocation suggestion (%)  
+
+━━━━━━━━━━━━━━━━━━━━
+6️⃣ 🛒 BUYING STRATEGY & TARGETS  
+
+Provide:
+- Ideal Buy Zone (price range)  
+- Accumulation strategy (Lumpsum / SIP / Dip buying)  
+- 1-Year Target Price  
+- 3-Year Target Price  
+- 5-Year Target Price (Conservative & Aggressive)  
+
+━━━━━━━━━━━━━━━━━━━━
+7️⃣ 🏁 FINAL VERDICT (VERY IMPORTANT)  
+
+Give:
+- Final Recommendation: Strong Buy / Buy / Hold / Avoid  
+- Reason in 3–4 simple Tamil points  
+- One-line summary:  
+  “இந்த பங்கு ____ வகை முதலீட்டாளர்களுக்கு ஏற்றது.”
+
+Rules:
+- Be realistic (no hype targets).  
+- Combine both fundamental + technical before verdict.  
+- Clearly mention risk.  
+- Language must be ** simple Tamil**.  
+- Format neatly with headings and tables.
+━━━━━━━━━━━━━━━━━━━━
+8️⃣ 📱 WHATSAPP INVESTOR SUMMARY (AUTO-GENERATED)
+
+After completing the full analysis above, generate a
+“WhatsApp-friendly investor summary” in simple Tamil.
+
+Include only key points:
+- 📌 Stock Name & Sector
+- 💰 CMP (Current Market Price)
+- 📊 P/E Ratio & Valuation view (Cheap / Fair / Expensive)
+- 📈 Trend (Bullish / Neutral / Bearish)
+- 🧠 Fundamental Strength (High / Medium / Low)
+- ⚠️ Risk Level
+- 🛒 Buy / Hold / Avoid suggestion
+- 🎯 Long-term view (one simple line)
+
+Rules:
+- Very short & crisp
+- Bullet points only
+- No heavy theory
+- Suitable for common retail investors
+- No hype, realistic tone
+
+End with one clear conclusion line:
+“இந்த பங்கு நீண்டகால முதலீட்டுக்கு ____ வகை முதலீட்டாளர்களுக்கு ஏற்றது.”`,
+    "stock_analysis_full_25-point": (stock) => `Analyze the following company using the FULL 25-POINT professional stock research model.
+
+Company Name: ${stock}
+
+Analyze using:
+
+1. Market Capitalization
+2. Total Number of Shares / Equity Structure
+3. Shareholding Pattern (Promoter, FII, DII, Public)
+4. Revenue / Total Income (last 5 years)
+5. Net Profit (last 5 years)
+6. EPS Growth (5 years)
+7. PE Ratio (vs Industry + Historical)
+8. Price-to-Book (P/B) and Book Value analysis
+9. 5-Year & Lifetime Chart Pattern (CAGR, highs/lows, trend strength)
+10. Interest / Total Expenses / Depreciation trend
+11. Gross NPA / Net NPA (if Bank/NBFC)
+12. Company Growth (5-year CAGR: Sales, Profit)
+13. Free Cash Flow (FCF) trend and strength
+14. Moat Analysis (Brand, Cost, Scale, Tech, Distribution)
+15. Debt Structure + Interest Coverage Ratio (ICR)
+16. Management Quality & Capital Allocation quality
+17. Insider & Promoter Buying/Selling Trend
+18. Institutional Confidence (FII/DII trend)
+19. Segmental Growth + Industry Opportunity (TAM)
+20. Risk Factors (Macro + Sector + Company Specific)
+21. PEG Ratio (Valuation vs Growth check)
+22. Dividend Track Record & Payout Quality
+23. ROE/ROCE (5-year trend)
+24. Working Capital Cycle & Cash Conversion
+25. Intrinsic Value (DCF + Graham + Relative Valuation)
+
+Final Output:
+
+- Full 25-point table
+- Deep explanation for each point
+- Lifetime chart interpretation (easy words)
+- Tamil Summary (clear & simple)
+- Final Verdict: BUY / HOLD / AVOID
+- Buy Range, Risk Level, Target Range (3–5 yrs)`,
+    "stock_fundamental_analysis_prompt": (stock) => `Analyze the following company In Tamil Language using a detailed fundamental & Techinical analysis model and give a clear investment verdict (BUY / HOLD / AVOID).
+Company Name: ${stock}
+Stock Exchange: [NSE ]
+Investment Horizon: [Short / Medium / Long term – 3-5 years]
+Please analyze the company based on the following points:
+FUNDAMENTAL ANALYSIS 
+1.Market Capitalization & Company Size (Large / Mid / Small cap), 
+1.2. CMP vs 52  week high, low,  correction if any in%. 
+2.Business Model & Core Products / Services
+3.Industry Overview & Competitive Position
+4.Promoter Holding & Shareholding Pattern (Promoters, FIIs, DIIs, Public)
+5.Revenue, EBITDA & Net Profit growth Value (Last 5 years)
+6.EPS growth Value (Last 5 years) & Current EPS
+7.Return Ratios (ROE, ROCE, ROA)
+8.Debt-to-Equity Ratio & Interest Coverage
+9.Operating & Net Profit Margins
+10.Cash Flow Analysis (Operating, Investing, Financing)
+12.Valuation Metrics (PE, PB, EV/EBITDA vs Industry)
+13.Intrinsic Value (DCF / Graham Formula if possible)
+14.Dividend History in Rs & Dividend Yield 
+15.Asset Quality & Balance Sheet Strength
+16.Recent Corporate Actions / News / Risks
+*****TECHNICAL ANALYSIS (From TradingView Chart)****
+17. Overall trend on Daily & Weekly (Uptrend / Sideways / Downtrend)
+18. Price action structure (Higher High / Lower Low)
+19. Price vs 20 EMA, 50 EMA & 200 EMA
+20. RSI strength (Overbought / Neutral / Oversold)
+21. Fibonacci 
+22MACD / Momentum confirmation
+23. Volume analysis (Accumulation / Distribution)
+24. Major Support & Resistance zones
+
+Red Flags (If any)
+Final Output Required:
+-----------------------
+🔹 Final Output Required
+📈 Trend bias (Bullish / Neutral / Bearish)
+📈 Growth Potential (Low / Medium / High) 
+🎯 Best buy / accumulation zone (price range)
+🛑 Invalidation / stop-loss level
+✅ Key Strengths 
+⚠️ Risk level (Low / Medium / High)
+🏁 Final verdict: BUY / HOLD / AVOID
+🧠 Simple investor-friendly summary`,
+    "whatsapp_short_analayz": (stock) => `You are an expert stock market analyst with 20+ years of experience in fundamental and technical analysis. Create a comprehensive deep analysis report for ${stock} (Ticker: ${stock}) listed on NSE/BSE.Language: [Tamil/English]
+Analyze everything from Business Moat, P/E, Net Profit, Debt, to RSI and Support levels. 📊
+Finally, generate a 'WhatsApp Short Message Summary' using this exact format:
+🚀 Stock Name: ${stock} in Bold Letter
+📅 Date Of Analyze:[TODAY DATE}
+💰 Current Price: [Price]
+⚡ 52 Week high/ Low :[Price] [% of correction]
+🚶‍➡️ Debt-to-Equity: [Value]
+💎 Valuation (P/E): [Value] (Compare with Sector P/E)
+💎 EPS( Earning Per Share):[Value]
+📊 Key Financials Cash Flow:[Amount]
+📈 Profitability: ₹[Value] Crores ([Growth]% Growth) 💸
+💰 Dividend: [Yield]% (₹[Amount] per share) 🏦
+🛡️ Asset Quality/ROE: [Value]% 🔍
+🧱 Business Moat: [One line about strength] 🏰
+🎯 Verdict: [Buy/Wait/Avoid] ✅
+📉 Entry Range: ₹[Price] - ₹[Price] 🛒
+🚀 Target: ₹[Target Price] (Long term) 🏹
+⚠️ Key Risk: [Main risk factor] 🚩
+[Add a catchy one-liner closing about the stock] 🌟"
+Include only key points:`,
+    "📊_technical_+_fundamental_analysis_prompt_(professional)": (stock) => `Analyze the stock shown on my TradingView chart using both Technical and Fundamental analysis and give a clear investment view.
+
+Stock Name / Symbol: ${stock}
+Exchange: NSE 
+Timeframes Viewed: Daily & Weekly
+Investment Horizon: Short / Medium / Long term (mention years)
+
+-------------------------
+FUNDAMENTAL ANALYSIS
+1. Market Capitalization & Company type (Large / Mid / Small cap)
+2. Business model & core revenue sources
+3. Industry outlook & competitive position
+4. Revenue, Net Profit & EPS growth (last 5 years)
+5. ROE, ROCE & Operating / Net profit margins
+6. Debt-to-Equity & Interest coverage ratio
+7. Cash flow quality (Operating cash flow consistency)
+8. Valuation metrics (PE, PB, EV/EBITDA vs industry)
+9. Promoter holding & recent changes
+10. Key strengths, risks & red flags (if any)
+
+-------------------------
+TECHNICAL ANALYSIS (From TradingView Chart)
+11. Overall trend on Daily & Weekly (Uptrend / Sideways / Downtrend)
+12. Price action structure (Higher High / Lower Low)
+13. Price vs 20 EMA, 50 EMA & 200 EMA
+14. RSI strength (Overbought / Neutral / Oversold)
+15. MACD / Momentum confirmation
+16. Volume analysis (Accumulation / Distribution)
+17. Major Support & Resistance zones
+
+-----------------------
+🔹 Final Output Required
+📈 Trend bias (Bullish / Neutral / Bearish)
+🎯 Best buy / accumulation zone (price range)
+🛑 Invalidation / stop-loss level
+⚠️ Risk level (Low / Medium / High)
+🏁 Final verdict: BUY / HOLD / AVOID
+🧠 Simple investor-friendly summary`,
+
+};
+
+function generate() {
+    const stock = document.getElementById("stock").value.trim().toUpperCase();
+    const type = document.getElementById("promptType").value;
+    if (!stock) return alert("Enter stock!");
+    
+    if (promptTemplates[type]) {
+        // This regex replaces any instance of ${stock} in your .txt files
+        let template = promptTemplates[type](stock);
+        document.getElementById("output").value = template.replace(/\${stock}/g, stock);
+    }
+}
+
+function copyText() {
+    const text = document.getElementById("output");
+    text.select();
+    document.execCommand("copy");
+    alert("Copied!");
+}
+</script>
+</body>
+</html>

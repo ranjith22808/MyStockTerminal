@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETF BeES & Stocks Calculator</title>
+    <style>
+        :root {
+            --orange: #FF5723;
+            --yellow: #FFEB3B;
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #e0e0e0;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .calc-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid #333;
+        }
+        h2 { color: var(--orange); text-align: center; margin-top: 0; text-transform: uppercase; letter-spacing: 1px; }
+        .input-box { margin-bottom: 15px; }
+        label { display: block; font-size: 0.85rem; color: var(--yellow); margin-bottom: 6px; font-weight: bold; }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background: #2a2a2a;
+            border: 2px solid #333;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            box-sizing: border-box;
+        }
+        input:focus { border-color: var(--orange); }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--orange);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .results {
+            margin-top: 20px;
+            background: #252525;
+            padding: 15px;
+            border-radius: 15px;
+            display: none;
+            border-left: 4px solid var(--orange);
+        }
+        .row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .net-profit { color: #4CAF50; font-size: 1.3rem; font-weight: bold; padding-top: 10px; border-top: 1px solid #444; }
+        
+        /* Terms Section */
+        .terms {
+            margin-top: 25px;
+            font-size: 0.75rem;
+            color: #888;
+            line-height: 1.5;
+            border-top: 1px dashed #444;
+            padding-top: 15px;
+        }
+        .terms b { color: var(--yellow); }
+    </style>
+</head>
+<body>
+
+<div class="calc-card">
+    <h2>Profit&Charges Calculator</h2>
+    
+    <div class="input-box">
+        <label>ASSET CLASS</label>
+        <select id="type">
+            <option value="etf">Etf BeES (Silver/Gold)</option>
+            <option value="stock">Regular Stocks (Equity)</option>
+        </select>
+    </div>
+
+    <div class="input-box">
+        <label>QUANTITY</label>
+        <input type="number" id="qty" value="100">
+    </div>
+
+    <div class="input-box">
+        <label>BUY PRICE (₹)</label>
+        <input type="number" id="buy" value="200">
+    </div>
+
+    <div class="input-box">
+        <label>SELL PRICE (₹)</label>
+        <input type="number" id="sell" value="220">
+    </div>
+
+    <button onclick="calculate()">GET SUMMARY</button>
+
+    <div class="results" id="res">
+        <div class="row"><span>Gross Profit:</span> <span id="gross">₹0</span></div>
+        <div class="row"><span>Total Charges:</span> <span id="charges" style="color:#ff5252;">₹0</span></div>
+        <div class="row net-profit"><span>Net In-Hand:</span> <span id="net">₹0</span></div>
+    </div>
+
+    <div class="terms">
+        <b>1. FUND PROCESSING:</b> As per T+1 settlement (2026), 80% of sell funds are available immediately. Full 100% can be withdrawn after 1 trading day (usually after 8:30 PM).<br><br>
+        <b>2. TAXES (STCG):</b> If sold within 1 year, <b>Stocks</b> are taxed at 20% flat. <b>ETF BeES</b> gains are added to your personal income slab (Taxable at 5% to 30%).<br><br>
+        <b>3. GST & DP:</b> A fixed <b>₹15.93</b> (incl. 18% GST) DP charge is applied by Zerodha/CDSL per day per company when you sell holdings.
+    </div>
+</div>
+
+<script>
+function calculate() {
+    const type = document.getElementById('type').value;
+    const qty = parseFloat(document.getElementById('qty').value);
+    const buy = parseFloat(document.getElementById('buy').value);
+    const sell = parseFloat(document.getElementById('sell').value);
+
+    const buyValue = buy * qty;
+    const sellValue = sell * qty;
+    const turnover = buyValue + sellValue;
+    const grossProfit = sellValue - buyValue;
+
+    // 1. STT Calculation (Specific to 2026 rules)
+    let stt = 0;
+    if (type === 'etf') {
+        stt = (sellValue * 0.00001); // 0.001% on Sell
+    } else {
+        stt = (buyValue * 0.001) + (sellValue * 0.001); // 0.1% Both sides
+    }
+
+    // 2. Zerodha Delivery Charges
+    const dpCharges = 15.93; // Fixed with GST
+    const exchangeTxn = (turnover * 0.0000322); // NSE
+    const sebiCharges = (turnover * 0.000001) * 1.18; // Incl GST
+    const stampDuty = (buyValue * 0.00015); // 0.015% on Buy
+
+    const totalCharges = stt + dpCharges + exchangeTxn + sebiCharges + stampDuty;
+    const netProfit = grossProfit - totalCharges;
+
+    document.getElementById('gross').innerText = "₹" + grossProfit.toLocaleString();
+    document.getElementById('charges').innerText = "- ₹" + totalCharges.toFixed(2);
+    document.getElementById('net').innerText = "₹" + netProfit.toLocaleString(undefined, {minimumFractionDigits: 2});
+    
+    document.getElementById('res').style.display = 'block';
+}
+</script>
+
+</body>
+</html>

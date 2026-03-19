@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Stock Average Calculator</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --success: #00c853;
+            --danger: #ff1744;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2d3436;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #636e72;
+            margin: 20px 0 10px;
+            font-weight: 700;
+        }
+
+        .row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .input-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #636e72;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #edf2f7;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+        }
+
+        .market-price-input {
+            border: 2px solid var(--primary);
+            background: #f8faff;
+        }
+
+        .summary-card {
+            background: #f8f9fd;
+            border-radius: 16px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #2d3436;
+        }
+
+        .avg-display {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #cbd5e0;
+        }
+
+        .pl-badge {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            background: #f1f2f6;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .pl-badge.profit {
+            background: var(--success);
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .pl-badge.loss {
+            background: var(--danger);
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .pl-value {
+            font-size: 2rem;
+            font-weight: 900;
+            display: block;
+        }
+
+        .btn-reset {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            background: #dfe6e9;
+            color: #2d3436;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-reset:hover {
+            background: #b2bec3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>📈 InvestCalc Pro</h2>
+    
+    <div class="section-title">Buy History</div>
+    <div class="row">
+        <div class="input-group">
+            <label>Shares</label>
+            <input type="number" class="qty" placeholder="0" oninput="calculate()">
+        </div>
+        <div class="input-group">
+            <label>Price (₹)</label>
+            <input type="number" class="prc" placeholder="0.00" oninput="calculate()">
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-group"><input type="number" class="qty" placeholder="Shares" oninput="calculate()"></div>
+        <div class="input-group"><input type="number" class="prc" placeholder="Price (₹)" oninput="calculate()"></div>
+    </div>
+    <div class="row">
+        <div class="input-group"><input type="number" class="qty" placeholder="Shares" oninput="calculate()"></div>
+        <div class="input-group"><input type="number" class="prc" placeholder="Price (₹)" oninput="calculate()"></div>
+    </div>
+
+    <div class="section-title">Market Update</div>
+    <div class="input-group">
+        <label>Current Market Price (₹)</label>
+        <input type="number" id="marketPrice" class="market-price-input" placeholder="0.00" oninput="calculate()">
+    </div>
+
+    <div class="summary-card">
+        <div class="summary-row"><span>Total Shares</span><b id="totalQty">0</b></div>
+        <div class="summary-row"><span>Investment</span><b id="totalCost">₹0.00</b></div>
+        <div class="avg-display">Avg: ₹<span id="avgPrice">0.00</span></div>
+    </div>
+
+    <div id="plCard" class="pl-badge">
+        <small id="plLabel">PROFIT / LOSS</small>
+        <span id="plValue" class="pl-value">₹0.00</span>
+        <b id="plPercent">0.00%</b>
+    </div>
+
+    <button class="btn-reset" onclick="resetAll()">RESET DATA</button>
+</div>
+
+<script>
+function calculate() {
+    const qtyInputs = document.getElementsByClassName('qty');
+    const prcInputs = document.getElementsByClassName('prc');
+    const marketPrice = parseFloat(document.getElementById('marketPrice').value) || 0;
+    
+    let totalShares = 0;
+    let totalCost = 0;
+
+    for (let i = 0; i < qtyInputs.length; i++) {
+        let q = parseFloat(qtyInputs[i].value) || 0;
+        let p = parseFloat(prcInputs[i].value) || 0;
+        totalShares += q;
+        totalCost += (q * p);
+    }
+
+    const avgPrice = totalShares > 0 ? (totalCost / totalShares) : 0;
+    const plAmount = (totalShares * marketPrice) - totalCost;
+    const plPercentage = totalCost > 0 ? (plAmount / totalCost) * 100 : 0;
+
+    document.getElementById('totalQty').innerText = totalShares.toLocaleString('en-IN');
+    document.getElementById('totalCost').innerText = '₹' + totalCost.toLocaleString('en-IN', {minimumFractionDigits: 2});
+    document.getElementById('avgPrice').innerText = avgPrice.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    
+    const plCard = document.getElementById('plCard');
+    const plValueElem = document.getElementById('plValue');
+    const plPercentElem = document.getElementById('plPercent');
+
+    if (marketPrice > 0) {
+        plValueElem.innerText = (plAmount >= 0 ? '+₹' : '-₹') + Math.abs(plAmount).toLocaleString('en-IN', {minimumFractionDigits: 2});
+        plPercentElem.innerText = plPercentage.toFixed(2) + '%';
+        plCard.className = plAmount >= 0 ? 'pl-badge profit' : 'pl-badge loss';
+    } else {
+        plCard.className = 'pl-badge';
+        plValueElem.innerText = '₹0.00';
+        plPercentElem.innerText = '0.00%';
+    }
+}
+
+function resetAll() {
+    document.querySelectorAll('input').forEach(i => i.value = '');
+    calculate();
+}
+</script>
+
+</body>
+</html>
