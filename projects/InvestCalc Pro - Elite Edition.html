@@ -2,9 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InvestCalc Pro | Premium Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>InvestCalc Pro | Invested Amount & P&L Dashboard</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         :root {
             --primary: #6366f1;
             --accent: #f59e0b;
@@ -15,10 +19,11 @@
             --input: #334155;
             --text: #f8fafc;
             --text-muted: #94a3b8;
+            --border-light: rgba(255,255,255,0.08);
         }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             display: flex;
@@ -30,149 +35,191 @@
 
         .container {
             width: 100%;
-            max-width: 460px;
+            max-width: 480px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 18px;
         }
 
         .card {
             background: var(--card);
-            border-radius: 24px;
-            padding: 24px;
-            border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+            border-radius: 28px;
+            padding: 22px 20px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 15px 35px -12px rgba(0, 0, 0, 0.5);
+            transition: all 0.2s;
         }
 
         .header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+            align-items: baseline;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .header h2 {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             margin: 0;
             font-weight: 800;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            background: linear-gradient(135deg, #a5b4fc, #818cf8);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
         }
 
         .btn-clear {
             background: rgba(239, 68, 68, 0.1);
-            color: var(--error);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            padding: 5px 10px;
-            border-radius: 8px;
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 6px 14px;
+            border-radius: 40px;
             font-size: 0.7rem;
             font-weight: 700;
             cursor: pointer;
             transition: 0.2s;
+            backdrop-filter: blur(4px);
         }
 
-        .btn-clear:hover { background: var(--error); color: white; }
+        .btn-clear:hover {
+            background: var(--error);
+            color: white;
+            border-color: var(--error);
+        }
 
         select.type-badge {
             background: var(--input);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid var(--border-light);
             color: var(--text);
-            padding: 8px 12px;
-            border-radius: 12px;
+            padding: 10px 14px;
+            border-radius: 20px;
             font-size: 0.85rem;
             width: 100%;
-            margin-bottom: 15px;
             cursor: pointer;
+            font-weight: 500;
+            margin-bottom: 5px;
         }
 
-        /* Buy History */
+        /* Buy rows grid */
+        .label-row {
+            display: grid;
+            grid-template-columns: 0.7fr 1.2fr 0.9fr;
+            padding: 0 6px;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-weight: 800;
+            letter-spacing: 0.4px;
+            margin-bottom: 8px;
+            margin-top: 8px;
+        }
+
         .buy-row {
             display: grid;
-            grid-template-columns: 0.8fr 1.2fr 1fr;
+            grid-template-columns: 0.7fr 1.2fr 0.9fr;
             gap: 10px;
             align-items: center;
-            background: rgba(0,0,0,0.15);
-            padding: 8px 12px;
-            border-radius: 14px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 8px 10px;
+            border-radius: 18px;
             margin-bottom: 8px;
         }
 
         input {
             background: var(--input);
             border: 1px solid transparent;
-            border-radius: 10px;
+            border-radius: 12px;
             color: white;
-            padding: 10px;
-            font-size: 0.9rem;
+            padding: 10px 8px;
+            font-size: 0.85rem;
             width: 100%;
             box-sizing: border-box;
+            transition: 0.15s;
         }
 
-        input:focus { outline: none; border-color: var(--primary); }
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #2d3a5e;
+        }
+
+        input::placeholder {
+            color: #64748b;
+            font-size: 0.75rem;
+        }
 
         .row-total-label {
-            font-size: 0.8rem;
-            color: var(--success);
+            font-size: 0.75rem;
             font-weight: 700;
             text-align: right;
+            color: #a5f3c2;
+            background: rgba(0,0,0,0.2);
+            padding: 6px 8px;
+            border-radius: 12px;
         }
 
-        .label-row {
-            display: grid; 
-            grid-template-columns: 0.8fr 1.2fr 1fr; 
-            padding: 0 12px; 
-            font-size: 0.65rem; 
-            color: var(--text-muted); 
-            font-weight: 800;
-            margin-bottom: 5px;
-        }
-
-        /* Results Styling */
+        /* stats section */
         .stats-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 22px;
         }
 
         .stat-item {
-            background: rgba(255,255,255,0.03);
-            padding: 15px;
-            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px 5px;
+            border-radius: 20px;
             text-align: center;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid var(--border-light);
+            backdrop-filter: blur(2px);
         }
 
         .stat-label {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
-        .stat-value { font-weight: 800; font-size: 1.2rem; }
+        .stat-value {
+            font-weight: 800;
+            font-size: 1rem;
+            color: #e2e8f0;
+        }
 
-        .main-display { text-align: center; padding: 10px 0; }
-        #net { font-size: 2.8rem; font-weight: 900; display: block; }
-        #percent { 
-            font-size: 0.9rem; 
-            padding: 5px 15px; 
-            border-radius: 20px; 
-            font-weight: 800; 
+        .main-display {
+            text-align: center;
+            padding: 12px 0;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 32px;
+            margin-bottom: 12px;
+        }
+
+        #net {
+            font-size: 2.4rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        #percent {
+            font-size: 0.85rem;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-weight: 800;
             display: inline-block;
-            margin-top: 5px;
+            margin-top: 6px;
         }
 
         .charges-box {
-            background: rgba(0,0,0,0.2);
-            border-radius: 18px;
-            padding: 15px;
-            margin-top: 15px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 24px;
+            padding: 16px;
+            margin-top: 12px;
         }
 
         .charge-line {
@@ -180,20 +227,50 @@
             justify-content: space-between;
             font-size: 0.8rem;
             color: var(--text-muted);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+        }
+
+        .invested-highlight {
+            background: linear-gradient(90deg, rgba(99,102,241,0.2), rgba(99,102,241,0.02));
+            padding: 8px 12px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .invested-highlight span:first-child {
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        .invested-highlight span:last-child {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: #c084fc;
         }
 
         .charge-line.total {
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px dashed rgba(255,255,255,0.1);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed rgba(255,255,255,0.15);
             color: var(--text);
             font-weight: 700;
         }
 
-        .positive { color: var(--success) !important; }
-        .negative { color: var(--error) !important; }
+        .positive {
+            color: var(--success) !important;
+        }
 
+        .negative {
+            color: var(--error) !important;
+        }
+
+        .subnote {
+            font-size: 0.6rem;
+            text-align: center;
+            margin-top: 8px;
+            color: #5b6e8c;
+        }
     </style>
 </head>
 <body>
@@ -201,169 +278,303 @@
 <div class="container">
     <div class="card">
         <div class="header">
-            <h2>InvestCalc Pro</h2>
-            <button class="btn-clear" onclick="clearInputs()">CLEAR ALL</button>
+            <h2>📊 INVESTMENT CALC</h2>
+            <button class="btn-clear" onclick="clearAllInputs()">⟳ RESET</button>
         </div>
 
-        <select id="type" class="type-badge" onchange="calculate()">
-            <option value="etf">Silver/Gold BeES (ETF)</option>
-            <option value="stock">Equity Delivery (Stocks)</option>
+        <select id="instrumentType" class="type-badge" onchange="calculatePerformance()">
+            <option value="etf">🏦 Silver/Gold BeES (ETF)</option>
+            <option value="stock">📈 Equity Delivery (Stocks)</option>
         </select>
 
+        <!-- BUY TRANSACTIONS TABLE -->
         <div class="label-row">
-            <span>SHARES</span>
-            <span>BUY PRICE (₹)</span>
-            <span style="text-align: right;">VALUE</span>
+            <span>🔢 QTY</span>
+            <span>💸 BUY PRICE (₹)</span>
+            <span style="text-align: right;">💰 INVESTED</span>
         </div>
 
-        <div id="buy-rows">
+        <div id="buyRowsContainer">
+            <!-- 4 rows: dynamic update via JS but static IDs for simplicity -->
             <div class="buy-row">
-                <input type="number" id="q1" placeholder="0" oninput="updateAverage()">
-                <input type="number" id="p1" placeholder="0.00" oninput="updateAverage()">
-                <span id="r1-total" class="row-total-label">₹0</span>
+                <input type="number" id="qty1" placeholder="0" value="" step="any" oninput="updateTotalsAndInvested()">
+                <input type="number" id="price1" placeholder="0.00" step="any" oninput="updateTotalsAndInvested()">
+                <span id="inv1" class="row-total-label">₹0</span>
             </div>
             <div class="buy-row">
-                <input type="number" id="q2" placeholder="0" oninput="updateAverage()">
-                <input type="number" id="p2" placeholder="0.00" oninput="updateAverage()">
-                <span id="r2-total" class="row-total-label">₹0</span>
+                <input type="number" id="qty2" placeholder="0" value="" step="any" oninput="updateTotalsAndInvested()">
+                <input type="number" id="price2" placeholder="0.00" step="any" oninput="updateTotalsAndInvested()">
+                <span id="inv2" class="row-total-label">₹0</span>
             </div>
             <div class="buy-row">
-                <input type="number" id="q3" placeholder="0" oninput="updateAverage()">
-                <input type="number" id="p3" placeholder="0.00" oninput="updateAverage()">
-                <span id="r3-total" class="row-total-label">₹0</span>
+                <input type="number" id="qty3" placeholder="0" value="" step="any" oninput="updateTotalsAndInvested()">
+                <input type="number" id="price3" placeholder="0.00" step="any" oninput="updateTotalsAndInvested()">
+                <span id="inv3" class="row-total-label">₹0</span>
             </div>
             <div class="buy-row">
-                <input type="number" id="q4" placeholder="0" oninput="updateAverage()">
-                <input type="number" id="p4" placeholder="0.00" oninput="updateAverage()">
-                <span id="r4-total" class="row-total-label">₹0</span>
+                <input type="number" id="qty4" placeholder="0" value="" step="any" oninput="updateTotalsAndInvested()">
+                <input type="number" id="price4" placeholder="0.00" step="any" oninput="updateTotalsAndInvested()">
+                <span id="inv4" class="row-total-label">₹0</span>
             </div>
         </div>
 
-        <div style="margin-top: 15px;">
-            <label class="stat-label" style="color:var(--primary); font-weight: 800;">Current Market Price (CMP)</label>
-            <input type="number" id="sell" style="font-size: 1.1rem; border: 1px solid var(--primary); background: rgba(99, 102, 241, 0.05);" placeholder="Enter Live Price..." oninput="calculate()">
+        <!-- Highlighted TOTAL INVESTED AMOUNT block (main requirement) -->
+        <div class="invested-highlight" style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+            <span>💼 TOTAL INVESTED AMOUNT</span>
+            <span id="totalInvestedAmount" style="font-size: 1.3rem; font-weight: 800; color: #a78bfa;">₹0.00</span>
+        </div>
+
+        <div style="margin-top: 18px;">
+            <label class="stat-label" style="color:var(--primary); font-weight: 700; margin-bottom: 5px; display: block;">📌 Current Market Price (CMP)</label>
+            <input type="number" id="currentSellPrice" style="font-size: 1rem; border: 1px solid var(--primary); background: rgba(99, 102, 241, 0.08);" placeholder="Enter live price..." oninput="calculatePerformance()">
         </div>
     </div>
 
-    <div class="card" style="background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);">
-        
+    <!-- RESULTS CARD -->
+    <div class="card" style="background: linear-gradient(145deg, #111827 0%, #0b1120 100%);">
         <div class="stats-grid">
-            <div class="stat-item" style="border-color: rgba(99, 102, 241, 0.3);">
-                <span class="stat-label" style="color: var(--primary);">Avg. Buy Price</span>
-                <span id="disp-avg" class="stat-value">₹0.00</span>
+            <div class="stat-item">
+                <span class="stat-label">📈 Avg. Buy Price</span>
+                <span id="avgBuyPrice" class="stat-value">₹0.00</span>
             </div>
             <div class="stat-item">
-                <span class="stat-label">Total Quantity</span>
-                <span id="disp-qty" class="stat-value">0</span>
+                <span class="stat-label">🔢 Total Shares</span>
+                <span id="totalQuantity" class="stat-value">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">💰 Total Invested</span>
+                <span id="investedSummary" class="stat-value">₹0.00</span>
             </div>
         </div>
 
         <div class="main-display">
-            <span class="stat-label">Net Profit / Loss</span>
-            <span id="net" class="negative">₹0.00</span>
-            <span id="percent" style="background: rgba(255,255,255,0.05);">0.00%</span>
+            <span class="stat-label">📊 NET PROFIT / LOSS (after charges)</span>
+            <span id="netProfitLoss" class="negative">₹0.00</span>
+            <span id="returnPercent" style="background: rgba(255,255,255,0.05);">0.00%</span>
         </div>
 
         <div class="charges-box">
-            <div class="charge-line"><span>Gross P&L</span> <span id="s-gross">₹0.00</span></div>
-            <div class="charge-line"><span>Taxes & Charges</span> <span id="s-total">₹0.00</span></div>
+            <div class="charge-line"><span>📌 Gross P&L (before charges)</span> <span id="grossPL">₹0.00</span></div>
+            <div class="charge-line"><span>⚙️ Total Taxes & Charges</span> <span id="totalCharges">₹0.00</span></div>
             <div class="charge-line total">
-                <span>Break-even Price</span> 
-                <span id="breakeven" style="color: var(--accent);">₹0.00</span>
+                <span>🎯 Break-even Price (per share)</span> 
+                <span id="breakEvenPrice" style="color: var(--accent); font-weight: 800;">₹0.00</span>
             </div>
         </div>
+        <div class="subnote">*Charges: STT, DP, NSE Turnover, SEBI, Stamp duty as per Indian markets.</div>
     </div>
 </div>
 
 <script>
-function updateAverage() {
-    let tQty = 0, tVal = 0;
-    for (let i = 1; i <= 4; i++) {
-        const q = parseFloat(document.getElementById(`q${i}`).value) || 0;
-        const p = parseFloat(document.getElementById(`p${i}`).value) || 0;
-        const rowTotal = q * p;
-        document.getElementById(`r${i}-total`).innerText = "₹" + Math.round(rowTotal).toLocaleString();
-        tQty += q; 
-        tVal += rowTotal;
-    }
-    
-    document.getElementById('disp-qty').innerText = tQty.toLocaleString();
-    const avg = tQty > 0 ? (tVal/tQty) : 0;
-    document.getElementById('disp-avg').innerText = "₹" + avg.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    calculate();
-}
-
-function calculate() {
-    let tQty = 0, tVal = 0;
-    for (let i = 1; i <= 4; i++) {
-        const q = parseFloat(document.getElementById(`q${i}`).value) || 0;
-        const p = parseFloat(document.getElementById(`p${i}`).value) || 0;
-        tQty += q; tVal += (p * q);
-    }
-    
-    const sellPrice = parseFloat(document.getElementById('sell').value) || 0;
-    const type = document.getElementById('type').value;
-
-    if (tQty <= 0 || sellPrice <= 0) {
-        resetResults();
-        return;
+    // Helper to format INR with 2 decimals and comma
+    function formatMoney(value) {
+        if (isNaN(value)) return "₹0.00";
+        return "₹" + value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    const buyVal = tVal;
-    const sellVal = sellPrice * tQty;
-    const turnover = buyVal + sellVal;
-    const grossProfit = sellVal - buyVal;
-
-    // Charges Logic (Standard Indian Brokerage Estimates)
-    const stt = (type === 'etf') ? (sellVal * 0.0001) : ((buyVal * 0.001) + (sellVal * 0.001));
-    const dp = 15.93; 
-    const nse = (turnover * 0.0000322);
-    const sebi = (turnover * 0.000001) * 1.18;
-    const stamp = (buyVal * 0.00015);
-    const totalCharges = stt + dp + nse + sebi + stamp;
-    const netProfit = grossProfit - totalCharges;
-
-    // Update Profit UI
-    const netEl = document.getElementById('net');
-    const perEl = document.getElementById('percent');
-    
-    netEl.innerText = (netProfit >= 0 ? "₹" : "-₹") + Math.abs(netProfit).toLocaleString(undefined,{minimumFractionDigits:2});
-    perEl.innerText = (netProfit >= 0 ? "▲ " : "▼ ") + ((netProfit/buyVal)*100).toFixed(2) + "%";
-    
-    netEl.className = netProfit >= 0 ? "positive" : "negative";
-    perEl.style.color = netProfit >= 0 ? "var(--success)" : "var(--error)";
-    perEl.style.background = netProfit >= 0 ? "rgba(16, 185, 129, 0.15)" : "rgba(239, 68, 68, 0.15)";
-
-    document.getElementById('s-gross').innerText = "₹" + grossProfit.toLocaleString(undefined,{minimumFractionDigits:2});
-    document.getElementById('s-total').innerText = "₹" + totalCharges.toFixed(2);
-    
-    // Break-even Calculation
-    const bePrice = (buyVal + totalCharges) / tQty;
-    document.getElementById('breakeven').innerText = "₹" + bePrice.toFixed(2);
-}
-
-function clearInputs() {
-    for (let i = 1; i <= 4; i++) {
-        document.getElementById(`q${i}`).value = '';
-        document.getElementById(`p${i}`).value = '';
-        document.getElementById(`r${i}-total`).innerText = '₹0';
+    function formatNumberInt(value) {
+        return parseInt(value).toLocaleString();
     }
-    document.getElementById('sell').value = '';
-    document.getElementById('disp-avg').innerText = '₹0.00';
-    document.getElementById('disp-qty').innerText = '0';
-    resetResults();
-}
 
-function resetResults() {
-    document.getElementById('net').innerText = "₹0.00";
-    document.getElementById('net').className = "negative";
-    document.getElementById('percent').innerText = "0.00%";
-    document.getElementById('percent').style.background = "rgba(255,255,255,0.05)";
-    document.getElementById('percent').style.color = "var(--text-muted)";
-    document.getElementById('s-gross').innerText = "₹0.00";
-    document.getElementById('s-total').innerText = "₹0.00";
-    document.getElementById('breakeven').innerText = "₹0.00";
-}
+    // Core function: update row invested, total invested amount (main feature), average, then full calculation
+    function updateTotalsAndInvested() {
+        let totalInvested = 0;
+        let totalQty = 0;
+        // loop through 4 rows and compute each row invested value
+        for (let i = 1; i <= 4; i++) {
+            const qty = parseFloat(document.getElementById(`qty${i}`).value) || 0;
+            const price = parseFloat(document.getElementById(`price${i}`).value) || 0;
+            const rowInvested = qty * price;
+            // Update row display value
+            const investedSpan = document.getElementById(`inv${i}`);
+            if (investedSpan) {
+                investedSpan.innerText = "₹" + Math.round(rowInvested).toLocaleString();
+            }
+            totalInvested += rowInvested;
+            totalQty += qty;
+        }
+
+        // SHOW TOTAL INVESTED AMOUNT - PRIMARY REQUEST FEATURE
+        const totalInvestedElement = document.getElementById('totalInvestedAmount');
+        if (totalInvestedElement) {
+            totalInvestedElement.innerText = formatMoney(totalInvested);
+        }
+        
+        // update summary stats: total quantity and invested summary in result card
+        document.getElementById('totalQuantity').innerText = totalQty.toLocaleString();
+        document.getElementById('investedSummary').innerText = formatMoney(totalInvested);
+        
+        // compute average buy price and update
+        const avgPrice = totalQty > 0 ? totalInvested / totalQty : 0;
+        document.getElementById('avgBuyPrice').innerText = "₹" + avgPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        
+        // store computed values for later usage. custom attributes not needed, calculatePerformance uses fresh DOM reads.
+        // trigger full P&L recalculation including charges
+        calculatePerformance();
+    }
+
+    // Main calculation routine: uses instrument type, buy rows, sell price.
+    function calculatePerformance() {
+        // Gather investment data
+        let totalInvested = 0;
+        let totalQty = 0;
+        for (let i = 1; i <= 4; i++) {
+            const qty = parseFloat(document.getElementById(`qty${i}`).value) || 0;
+            const price = parseFloat(document.getElementById(`price${i}`).value) || 0;
+            totalInvested += qty * price;
+            totalQty += qty;
+        }
+
+        const sellPrice = parseFloat(document.getElementById('currentSellPrice').value) || 0;
+        const instrument = document.getElementById('instrumentType').value;
+        
+        // If no quantity or no selling price, reset results but keep invested amount visible
+        if (totalQty === 0 || sellPrice <= 0 || totalInvested <= 0) {
+            // Still show invested amount (already shown thanks to updateTotalsAndInvested)
+            // But reset profit fields to avoid confusion
+            if (totalQty === 0 || totalInvested === 0) {
+                document.getElementById('netProfitLoss').innerText = "₹0.00";
+                document.getElementById('netProfitLoss').className = "negative";
+                document.getElementById('returnPercent').innerText = "0.00%";
+                document.getElementById('returnPercent').style.background = "rgba(255,255,255,0.05)";
+                document.getElementById('returnPercent').style.color = "var(--text-muted)";
+                document.getElementById('grossPL').innerText = "₹0.00";
+                document.getElementById('totalCharges').innerText = "₹0.00";
+                document.getElementById('breakEvenPrice').innerText = "₹0.00";
+            }
+            // If only sellPrice missing but we have qty, we can show something?
+            if (totalQty > 0 && totalInvested > 0 && sellPrice <= 0) {
+                document.getElementById('grossPL').innerText = "₹0.00";
+                document.getElementById('totalCharges').innerText = "₹0.00";
+                document.getElementById('netProfitLoss').innerText = "₹0.00";
+                document.getElementById('returnPercent').innerText = "0.00%";
+                document.getElementById('returnPercent').style.background = "rgba(255,255,255,0.05)";
+                document.getElementById('breakEvenPrice').innerText = "₹0.00";
+            }
+            return;
+        }
+
+        const buyValue = totalInvested;          // total cost
+        const sellValue = sellPrice * totalQty;
+        const turnover = buyValue + sellValue;
+        const grossProfit = sellValue - buyValue;
+
+        // Charges (Indian standard)
+        let stt = 0;
+        if (instrument === 'etf') {
+            // ETF: STT on sell side 0.01% (0.0001)
+            stt = sellValue * 0.0001;
+        } else {
+            // Equity Delivery: STT 0.1% on both buy and sell? Typically STT Delivery: 0.1% on sell only? Actually standard: STT equity delivery = 0.1% on sell side only.
+            // But many calculators: 0.1% on sell + small buy side? To be accurate: For delivery, STT (Securities Transaction Tax) = 0.1% on sell value. So we use sellValue * 0.001.
+            // However we'll maintain as given in initial code but slightly more accurate: buyVal * 0.001 + sellVal * 0.001? Actually in initial code: (buyVal * 0.001) + (sellVal * 0.001) => that's 0.2% total.
+            // In India it's 0.1% on sell only for delivery. But to match typical brokerage app preview, we keep requested logic but also classic. Let's do industry standard: STT delivery = sellVal * 0.001 (0.1% of sell). But the original snippet used double 0.1% for stocks (both sides). For consistent transparency we follow original formula: (buyVal*0.001)+(sellVal*0.001) because some platforms use flat. But we'll provide robust:
+            // We'll follow the original spec provided in the code (stock: both sides 0.1% for STT + other small charges) => that yields conservative charges.
+            stt = (buyValue * 0.001) + (sellValue * 0.001);
+        }
+
+        const dpCharges = 15.93;     // DP charges (flat per transaction)
+        const nseTurnover = turnover * 0.0000322;
+        const sebiCharges = (turnover * 0.000001) * 1.18;
+        const stampDuty = buyValue * 0.00015;
+
+        let totalCharges = stt + dpCharges + nseTurnover + sebiCharges + stampDuty;
+        // Clamp to not make negative in extreme small trades: charges should not exceed gross profit? not needed but we floor positive.
+        totalCharges = Math.max(0, totalCharges);
+        const netProfit = grossProfit - totalCharges;
+        
+        // update UI for gross & net
+        document.getElementById('grossPL').innerText = formatMoney(grossProfit);
+        document.getElementById('totalCharges').innerText = formatMoney(totalCharges);
+        
+        const netElement = document.getElementById('netProfitLoss');
+        netElement.innerText = netProfit >= 0 ? formatMoney(netProfit) : "-" + formatMoney(Math.abs(netProfit));
+        netElement.className = netProfit >= 0 ? "positive" : "negative";
+        
+        // percentage return based on total invested
+        let percentReturn = (netProfit / buyValue) * 100;
+        if (!isFinite(percentReturn)) percentReturn = 0;
+        const percentSpan = document.getElementById('returnPercent');
+        percentSpan.innerText = (netProfit >= 0 ? "▲ " : "▼ ") + percentReturn.toFixed(2) + "%";
+        if (netProfit >= 0) {
+            percentSpan.style.color = "var(--success)";
+            percentSpan.style.background = "rgba(16, 185, 129, 0.15)";
+        } else {
+            percentSpan.style.color = "var(--error)";
+            percentSpan.style.background = "rgba(239, 68, 68, 0.15)";
+        }
+        
+        // Break-even price per share (including all charges)
+        const breakEvenPerShare = (buyValue + totalCharges) / totalQty;
+        document.getElementById('breakEvenPrice').innerText = "₹" + breakEvenPerShare.toFixed(2);
+    }
+    
+    // Clear all inputs and reset everything - but keep total invested reset
+    function clearAllInputs() {
+        for (let i = 1; i <= 4; i++) {
+            const qtyInput = document.getElementById(`qty${i}`);
+            const priceInput = document.getElementById(`price${i}`);
+            if (qtyInput) qtyInput.value = '';
+            if (priceInput) priceInput.value = '';
+            const invSpan = document.getElementById(`inv${i}`);
+            if (invSpan) invSpan.innerText = '₹0';
+        }
+        document.getElementById('currentSellPrice').value = '';
+        
+        // Reset invested summary
+        document.getElementById('totalInvestedAmount').innerText = '₹0.00';
+        document.getElementById('totalQuantity').innerText = '0';
+        document.getElementById('investedSummary').innerText = '₹0.00';
+        document.getElementById('avgBuyPrice').innerText = '₹0.00';
+        
+        // Reset results fields
+        document.getElementById('netProfitLoss').innerText = '₹0.00';
+        document.getElementById('netProfitLoss').className = 'negative';
+        document.getElementById('returnPercent').innerText = '0.00%';
+        document.getElementById('returnPercent').style.background = 'rgba(255,255,255,0.05)';
+        document.getElementById('returnPercent').style.color = 'var(--text-muted)';
+        document.getElementById('grossPL').innerText = '₹0.00';
+        document.getElementById('totalCharges').innerText = '₹0.00';
+        document.getElementById('breakEvenPrice').innerText = '₹0.00';
+        
+        // Also update the row totals to show 0 and average reset (optional)
+        for (let i = 1; i <= 4; i++) {
+            const invElem = document.getElementById(`inv${i}`);
+            if (invElem) invElem.innerText = '₹0';
+        }
+        calculatePerformance(); // ensure all states zero
+    }
+    
+    // Attach event listeners to all buy inputs to recompute invested amount dynamically.
+    function bindEvents() {
+        for (let i = 1; i <= 4; i++) {
+            const qtyEl = document.getElementById(`qty${i}`);
+            const priceEl = document.getElementById(`price${i}`);
+            if (qtyEl) {
+                qtyEl.addEventListener('input', function() { updateTotalsAndInvested(); });
+            }
+            if (priceEl) {
+                priceEl.addEventListener('input', function() { updateTotalsAndInvested(); });
+            }
+        }
+        const sellInput = document.getElementById('currentSellPrice');
+        if (sellInput) {
+            sellInput.addEventListener('input', function() { calculatePerformance(); });
+        }
+        const typeSelect = document.getElementById('instrumentType');
+        if (typeSelect) {
+            typeSelect.addEventListener('change', function() { calculatePerformance(); });
+        }
+    }
+    
+    // initial call to set invested and prefill zero state
+    function init() {
+        bindEvents();
+        updateTotalsAndInvested();   // This shows zero invested amount
+        calculatePerformance();
+    }
+    
+    init();
 </script>
 </body>
 </html>
